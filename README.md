@@ -6,7 +6,13 @@ Protocols and tools to run (automated) atomistic simulations of enzyme-ligand sy
 Minimal software requirements:
 - AmberTools14 (see www.ambermd.org - Amber14.pdf manual has instructions for installation)
 
-Several utitilies/programs from AmberTools14 are used.
+Several utitilies/programs from AmberTools14 are used for the majority of (PREP protocol) tasks.
+
+
+Additional software requirements:
+- propka31 (see propka.ki.ku.dk ; Required for pKa estimation titratable residues, in presence of ligand)
+
+
 Currently, the protocols are only available as bash-scripts (for Linux or Mac OS X).
 All bash-scripts require awk & sed.
 NOTE: current bash-scripts are NOT fully POSIX compliant.

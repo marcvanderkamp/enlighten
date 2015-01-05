@@ -85,7 +85,7 @@ else
    echo "Preparing parameters for $lig_name: lig/$lig_name.prepc"
    # check if there are more than 1 atoms in the ligand, exit if not
    lig_atno=`awk -v lig=$lig_name '{if (substr($0,18,3)==lig && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print}' $pdb | grep -c $lig_name`
-   if [ $atno -le 1 ]; then
+   if [ $lig_atno -lt 2 ]; then
      echo " Ligand $lig_name contains 1 or less atoms. Please check your command."
      echo $Usage
      echo "Exiting..."

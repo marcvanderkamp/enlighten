@@ -83,7 +83,18 @@ elif [ -e include/$lig_name.prepc ]; then
    echo "Found include/$lig_name.prepc and will use this. (If this is NOT what you want, rename $lig_name.prepc or ligand in pdb.)"
 else
    echo "Preparing parameters for $lig_name: lig/$lig_name.prepc"
-   awk -v lig=$lig_name '{if (substr($0,18,3)==lig) print}' $pdb > lig/$lig_name.pdb
+   # check if there are more than 1 atoms in the ligand, exit if not
+   lig_atno=`awk -v lig=$lig_name '{if (substr($0,18,3)==lig && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print}' $pdb | grep -c $lig_name`
+   if [ $atno -le 1 ]; then
+     echo " Ligand $lig_name contains 1 or less atoms. Please check your command."
+     echo $Usage
+     echo "Exiting..."
+     exit
+   else
+     echo " Ligand $lig_name contains $atno atoms."
+   fi 
+   # print only the ATOM/HETATM fields for the ligand
+   awk -v lig=$lig_name '{if (substr($0,18,3)==lig && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print}' $pdb > lig/$lig_name.pdb
    cd lig
    antechamber -i  $lig_name.pdb -fi pdb -o $lig_name.prepc -fo prepc -rn $lig_name -c bcc -nc $lig_charge
 # Check here if antechamber/sqm have run successfully

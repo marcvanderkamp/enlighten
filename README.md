@@ -100,7 +100,7 @@ NB:  2cht_mod.pdb was created from 2CHT.pdb by:
 This is a more complicated test-case, demonstrating the use of prep.sh with a SS-bond, insertions etc. and an ASP that is best treated a protonated.
 
 to run prep.sh test:
-- copy 2cht_mod.pdb from test/ and optionally pre-calculated .prepc & .frcmod for CHOrismate:
+- copy 4euz_mod.pdb from test/ and optionally pre-calculated .prepc & .frcmod for meropenem (MEM):
 
   rsync -a /my/path/to/enzlig_tools/test/4EUZ/* .
 - run prep.sh as follows:

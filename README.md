@@ -20,10 +20,11 @@ Tested with:
 ## Available scripts
 ### prep.sh
 Takes enzyme-ligand pdb file and generates ligand parameters, adds hydrogens, adds solvent (sphere), generates Amber topology/coordinate files.
+
   Usage:  
   prep.sh \<pdb file\> \<ligand name\> \<net ligand charge\> [\<non-standard residue name; if multiple, put in "quotes"\>]
 - The pdb file should contain 1 (non-protein) ligand, WITH all hydrogens added!
 - Uses the following AmberTools14 programs: antechamber (& sqm), prmchk2, pdb4amber, reduce, tleap 
-- Ideally requires installation of propka31 (and put in \$PATH)
+- Ideally requires installation of propka31 (and put in $PATH)
 - Extensive comments in prep.sh provide more in-depth explanation of the steps in the protocol, etc.
 

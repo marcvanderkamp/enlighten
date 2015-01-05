@@ -81,7 +81,7 @@ if [ -z "$ENZLIG" ]; then
   echo "  export ENZLIG=\"/my/path/to/enzlig_tools\" "
   echo "Exiting..."
   exit 
-elif [ -d $ENZLIG/struct ]; then
+elif [ ! -d $ENZLIG/struct ]; then
   echo "Cannot find the $ENZLIG/struct directory that contains required files. "
   echo "Exiting..."
   exit 

@@ -10,7 +10,7 @@ Several utitilies/programs from AmberTools14 are used for the majority of (PREP 
 
 
 Additional software requirements:
-- propka31 (see propka.ki.ku.dk ; Required for pKa estimation titratable residues, in presence of ligand)
+- propka31 (see www.propka.ki.ku.dk ; Required for pKa estimation titratable residues, in presence of ligand)
 
 
 Currently, the protocols are only available as bash-scripts (for Linux or Mac OS X).

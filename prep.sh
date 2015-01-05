@@ -12,6 +12,31 @@
 # Rudimentary usage (to be replaced by usage with input flags etc.)
 Usage="Usage: prep.sh <pdb file> <ligand name> <net ligand charge> [<non-standard residue name; if multiple, put in \"quotes\">]"
 
+
+#### Read user input
+# TO DO: Replace this with proper input parsing (&checking + usage printing, probably use flags)
+#        Potentially useful example: http://stackoverflow.com/questions/1682214/pass-list-of-variables-to-bash-script
+
+# Rudimentary input checking
+if [ $# -ne 3 -a $# -ne 4 ]; then
+   echo $Usage
+   exit
+elif [ $# -eq 4 ]; then
+   alt_res_lst=$4
+   # Convert to array
+   declare -a alt_res=($alt_res_lst)
+else
+   # initialize $alt_res as empty variable?
+   alt_res=
+fi
+pdb=$1         # pdb WITH hydrogens on ligand!
+pdb_name=`echo $pdb | sed -e 's,\.pdb,,' -e 's,\.PDB,,'`
+lig_name=$2    #
+lig_charge=$3
+prot_pka=8.0   # predicted pKa above which ASP & GLU will be protonated (make into advanced opton)
+
+
+
 #### Check for required software ($AMBERHOME)
 if [ -z $AMBERHOME ]; then
    echo "Please set \$AMBERHOME and try again. Exiting..."
@@ -33,29 +58,6 @@ fi
 # Check for propka31 - if not available, print warning and skip propka31 step (by setting skip_propka31=1)
 skip_propka31=0
 command -v propka31 >/dev/null 2>&1 || { printf >&2 "propka31 cannot be found in \$PATH.\n WARNING: all ASP/GLU will be treated as unprotonated.\n" ; skip_propka31=1; }
-
-
-#### Read user input
-# TO DO: Replace this with proper input parsing (&checking + usage printing, probably use flags)
-#        Potentially useful example: http://stackoverflow.com/questions/1682214/pass-list-of-variables-to-bash-script 
-
-# Rudimentary input checking
-if [ $# -ne 3 -a $# -ne 4 ]; then
-   echo $Usage
-   exit
-elif [ $# -eq 4 ]; then
-   alt_res_lst=$4
-   # Convert to array
-   declare -a alt_res=($alt_res_lst)
-else
-   # initialize $alt_res as empty variable? 
-   alt_res=
-fi
-pdb=$1         # pdb WITH hydrogens on ligand!
-pdb_name=`echo $pdb | sed -e 's,\.pdb,,' -e 's,\.PDB,,'`
-lig_name=$2    # 
-lig_charge=$3
-prot_pka=8.0   # predicted pKa above which ASP & GLU will be protonated (make into advanced opton)
 
 
 

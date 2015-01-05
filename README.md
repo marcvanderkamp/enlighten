@@ -87,7 +87,7 @@ to run prep.sh test:
   /my/path/to/enzlig_tools/prep.sh 2cht_mod.pdb CHO -2
   
 NB:  2cht_mod.pdb was created from 2CHT.pdb by:
-- keeping chains A,B,C only
+- keeping ATOM/HETATM records from chains A,B,C only
 - deleting TSA from chains A,C
 - renaming TSA to CHO in chain B, changing coordinates a little (to separate bond not formed in chorismate)
 - Move CHO O7 so that it is the first CHO atom in pdb

@@ -91,7 +91,7 @@ else
      echo "Exiting..."
      exit
    else
-     echo " Ligand $lig_name contains $atno atoms."
+     echo " Ligand $lig_name contains $lig_atno atoms."
    fi 
    # print only the ATOM/HETATM fields for the ligand
    awk -v lig=$lig_name '{if (substr($0,18,3)==lig && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print}' $pdb > lig/$lig_name.pdb

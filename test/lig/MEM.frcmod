@@ -1,0 +1,50 @@
+Remark line goes here
+MASS
+
+BOND
+
+ANGLE
+ce-c2-ss   62.790     122.860   same as c2-c2-ss, penalty score=  2.2
+c2-ce-n    69.290     119.190   same as c2-ce-na, penalty score=  2.2
+
+DIHE
+c2-c3-cy-cy   9    1.400         0.000           3.000      same as X -c3-c3-X , penalty score= 86.5
+c2-c3-cy-n    9    1.400         0.000           3.000      same as X -c3-c3-X , penalty score= 86.5
+c2-c3-cy-h1   9    1.400         0.000           3.000      same as X -c3-c3-X , penalty score= 86.5
+c2-ce-n -cy   4    6.600       180.000           2.000      same as X -n -cc-X , penalty score=136.0
+c2-ce-n -c    1    0.650       180.000          -2.000      same as c2-c2-n -c 
+c2-ce-n -c    1    1.200       180.000           1.000      same as c2-c2-n -c , penalty score=237.0
+c3-c3-cy-cy   1    0.180         0.000          -3.000      same as c3-c3-c3-c3
+c3-c3-cy-cy   1    0.250       180.000          -2.000      same as c3-c3-c3-c3
+c3-c3-cy-cy   1    0.200       180.000           1.000      same as c3-c3-c3-c3, penalty score=173.5
+c3-c3-cy-n    9    1.400         0.000           3.000      same as X -c3-c3-X , penalty score= 86.5
+c3-c3-cy-h1   1    0.160         0.000           3.000      same as hc-c3-c3-c3, penalty score=173.5
+oh-c3-cy-cy   9    1.400         0.000           3.000      same as X -c3-c3-X , penalty score= 86.5
+h1-c3-cy-cy   1    0.160         0.000           3.000      same as hc-c3-c3-c3, penalty score=260.5
+c -ce-n -cy   4    6.600       180.000           2.000      same as X -n -cc-X , penalty score=136.0
+hc-c3-cy-cy   1    0.160         0.000           3.000      same as hc-c3-c3-c3, penalty score=173.5
+c3-c3-cy-c    9    1.400         0.000           3.000      same as X -c3-c3-X , penalty score= 86.5
+oh-c3-cy-c    9    1.400         0.000           3.000      same as X -c3-c3-X , penalty score= 86.5
+h1-c3-cy-c    9    1.400         0.000           3.000      same as X -c3-c3-X , penalty score= 86.5
+c -ce-n -c    1    0.650       180.000          -2.000      same as c2-c2-n -c 
+c -ce-n -c    1    1.200       180.000           1.000      same as c2-c2-n -c , penalty score=324.0
+hc-c3-cy-n    9    1.400         0.000           3.000      same as X -c3-c3-X , penalty score= 86.5
+c3-c3-cy-hc   1    0.160         0.000           3.000      same as hc-c3-c3-c3, penalty score= 86.5
+oh-c3-cy-hc   1    0.000         0.000          -3.000      same as hc-c3-c3-oh
+oh-c3-cy-hc   1    0.250         0.000           1.000      same as hc-c3-c3-oh, penalty score= 86.5
+h1-c3-cy-hc   1    0.150         0.000           3.000      same as hc-c3-c3-hc, penalty score=173.5
+hc-c3-cy-h1   1    0.150         0.000           3.000      same as hc-c3-c3-hc, penalty score=173.5
+
+IMPROPER
+c -c3-n -c3         1.1          180.0         2.0          Using general improper torsional angle  X-c3- n-c3, penalty score=  3.0)
+c3-n -c -o         10.5          180.0         2.0          Using general improper torsional angle  X- X- c- o, penalty score=  6.0)
+c3-ce-c2-ss         1.1          180.0         2.0          Using the default value
+cy-n -c -o         10.5          180.0         2.0          Using general improper torsional angle  X- X- c- o, penalty score=  6.0)
+c -ce-n -cy         1.1          180.0         2.0          Using the default value
+c -c2-ce-n          1.1          180.0         2.0          Using the default value
+ce-o -c -o          1.1          180.0         2.0          Using general improper torsional angle  X- o- c- o, penalty score=  3.0)
+
+NONBON
+
+
+

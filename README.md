@@ -8,12 +8,7 @@ Minimal software requirements:
 
 Several utitilies/programs from AmberTools14 are used for the majority of (PREP protocol) tasks.
 
-
-Additional software requirements:
-- propka31 (see www.propka.ki.ku.dk ; Required for pKa estimation titratable residues, in presence of ligand)
-
-
-Currently, the protocols are only available as bash-scripts (for Linux or Mac OS X).
+- Currently, the protocols are only available as bash-scripts (for Linux or Mac OS X).
 All bash-scripts require awk & sed.
 NOTE: current bash-scripts are NOT fully POSIX compliant.
 
@@ -21,6 +16,10 @@ Tested with:
 - GNU Awk 3.1.7 (Linux)
 - GNU sed version 4.2.1 (Linux)
 - awk version 20070501 (Mac OS)
+
+Additional software requirements:
+- propka31 (see www.propka.ki.ku.dk ; Required for pKa estimation titratable residues, in presence of ligand)
+
 
 ###Download the repository on Linux/UNIX/Mac :   
 
@@ -103,7 +102,7 @@ NB:  2cht_mod.pdb was created from 2CHT.pdb by:
 
 
 ####2) 4EUZ.pdb 
- (Class A beta-lactamase SFC-1 S73A complexed with Meropenem)
+ (Class A beta-lactamase SFC-1 S70A complexed with Meropenem)
 
 This is a more complicated test-case, demonstrating the use of prep.sh with a SS-bond, insertions etc. and an ASP that is best treated a protonated.
 

@@ -88,6 +88,7 @@ NB:  2cht_mod.pdb was created from 2CHT.pdb by:
 - keeping chains A,B,C only
 - deleting TSA from chains A,C
 - renaming TSA to CHO in chain B, changing coordinates a little (to separate bond not formed in chorismate)
+- Move CHO O7 so that it is the first CHO atom in pdb
 - adding hydrogens to CHO (in PyMOL)
 
 
@@ -105,5 +106,5 @@ NB: 4euz_mod.pdb was created from 4EUZ.pdb by:
 - Adding hydrogens to MEM (in PyMOL)
 - Deleting EDO (crystallisation agent) and NA (sodium ions)
 - Changed HAR to ARG and deleted its OH1 atom (HAR is modified ARG)
-- Move MEM C7 so that it is the first ligand atom (CONECT not adjusted, but CONECT records are ignored)
+- Move MEM C7 so that it is the first MEM atom (CONECT not adjusted, but CONECT records are ignored)
 - Swapped OD1/OD2 labels in Asp246

@@ -16,6 +16,32 @@ Tested with:
 - GNU sed version 4.2.1 (Linux)
 - awk version 20070501 (Mac OS)
 
+###Download the repository on Linux/UNIX/Mac :   
+
+First ensure that git is installed. Instructions are [here](http://git-scm.com/downloads) 
+
+Command-line:
+
+1) In the right-hand corner of this page, there is a title "HTTPS clone URL" with a URL in a field below it.
+Copy this link 
+
+2) Go to the command line on your Linux/Mac and cd to a suitable location to create the Repository
+Then type: 
+$ git clone https://github.com/marcvanderkamp/enzlig_tools.git
+
+On some UNIX clusters you may need to use SSH rather than HTTPS to clone the repository:
+$git clone git@github.com:marcvanderkamp/enzlig_tools.git
+
+3) This will download the Repository enzlig_tools for use on your local computer. 
+
+4) Several scripts in the current repository require you to set the ENZLIG environment variable to indicate the location of the repository. 
+
+In bash:
+export ENZLIG=/my/path/to/enzlig_tools/
+
+In tcsh/csh:
+setenv ENZLIG /my/path/to/enzlig_tools/
+
 
 ## Available scripts
 ### prep.sh

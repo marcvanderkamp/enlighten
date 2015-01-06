@@ -17,13 +17,13 @@ Tested with:
 - GNU sed version 4.2.1 (Linux)
 - awk version 20070501 (Mac OS)
 
-Additional software requirements:
+Additional recommended software requirements:
 - propka31 (see www.propka.ki.ku.dk ; Required for pKa estimation titratable residues, in presence of ligand)
 
 
 ###Download the repository on Linux/UNIX/Mac :   
 
-First ensure that git is installed. Instructions are [here](http://git-scm.com/downloads) 
+First ensure that git is installed. Instructions are [here](http://git-scm.com/downloads). 
 
 Command-line:
 
@@ -46,7 +46,7 @@ git clone git@github.com:marcvanderkamp/enzlig_tools.git
 
 3) This will download the Repository enzlig_tools for use on your local computer. 
 
-4) Several scripts in the current repository require you to set the ENZLIG environment variable to indicate the location of the repository. 
+4) Some scripts (struct.sh) in the current repository require you to set the ENZLIG environment variable to indicate the location of the repository. 
 
 In bash:
 

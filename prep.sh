@@ -33,8 +33,11 @@ pdb=$1         # pdb WITH hydrogens on ligand!
 pdb_name=`echo $pdb | sed -e 's,\.pdb,,' -e 's,\.PDB,,'`
 lig_name=$2    #
 lig_charge=$3
-prot_pka=8.0   # predicted pKa above which ASP & GLU will be protonated (make into advanced opton)
-
+ph=7.0         # Could be set by user (as advanced option)
+ph_offset=1.0  # Simply use 1 as offset - could perhaps also be set by user
+               #   ph_offset is used because it is better to (de)protonate residues ONLY if this is very clear from predicted pKa
+prot_pka=`echo "$ph + $ph_offset" | bc`    # predicted pKa above which ASP & GLU will be protonated 
+deprot_pka=`echo "$ph - $ph_offset" | bc`  # predicted pKa below which CYS,LYS will be deprotonated
 
 
 #### Check for required software ($AMBERHOME)
@@ -130,7 +133,7 @@ fi
 #### Run pdb4amber, reduce & propka31 on pdb, then change HIS and ASP/GLU as needed
 # Do this all in $pdb_name/ 
 # TO DO: check in ${pdb_name}_1_nonprot.pdb for residues that are not $lig_name or $alt_res
-# TO DO: check for protonation of LYS/ARG/TYR/CYS 
+# to do?: check for protonation of ARG/TYR? (BUT no standard amber parameters) 
 if [ ! -d "$pdb_name" ]; then
   echo "Preparing pdb (addition of hydrogens etc.)"
   mkdir $pdb_name
@@ -167,15 +170,27 @@ if [ $skip_propka31 -ne 1 ]; then
       awk -v resid=$res '{if ($3=="CA" && ($substr($0,23,4)==resid || $6==resid || $5==resid)) {if (substr($0,18,3)=="ASP") {resn="ASH"}; if (substr($0,18,3)=="GLU") {resn="GLH"} ; printf("s,%s %s,%s %s,g \n",substr($0,18,3),substr($0,22,6),resn,substr($0,22,6))}}'  ${pdb_name}_2.pdb >> rename.sed
     done
   fi
+# Check for CYS/LYS pKa's below deprot_pka and if so, print out and put in deprot_res_lst
+#  (Essentially the same as above for protonation of ASP/GLU)
+  deprot_res_lst=`awk -v pka=$deprot_pka '{if (NF==5 && (substr($0,0,6)=="   CYS" || substr($0,0,6)=="   LYS") && $4<=pka) {print $2}}' ${pdb_name}_2.pka`
+  if [ -n "$deprot_res_lst" ]; then
+    echo "The following CYS/LYS residues have predicted pKa's below $deprot_pka and will be deprotonated:"
+    echo "   (predicted pKa is indicated)"
+    for res in $deprot_res_lst; do
+      awk -v resid=$res '{if ($4==resid) printf("%s    ",substr($0,1,9))}' ${pdb_name}_1_renum.txt
+      awk -v resid=$res '{if (substr($0,1,3)=="   " && ($2==resid || substr($0,7,4)==resid)) print substr($0,17,5)}' ${pdb_name}_2.pka
+      awk -v resid=$res '{if ($3=="CA" && ($substr($0,23,4)==resid || $6==resid || $5==resid)) {if (substr($0,18,3)=="CYS") {resn="CYM"}; if (substr($0,18,3)=="LYS") {resn="LYN"} ; printf("s,%s %s,%s %s,g \n",substr($0,18,3),substr($0,22,6),resn,substr($0,22,6))}}'  ${pdb_name}_2.pdb >> rename.sed
+    done
+  fi
 fi
-# Run sed-scripts to rename HIS (& ASP/GLY - TO DO) AND remove hydrogens on HETATMs added by reduce
+# Run sed-scripts to rename HIS and residues to (de)protonate, AND remove hydrogens on HETATMs added by reduce
 sed -f rename.sed ${pdb_name}_2.pdb | awk '{if (substr($0,0,6)!="HETATM" || substr($0,78,7)!="H   new") print}' > ${pdb_name}_3.pdb
 cd ..
 
 
 #### Check alternative residue parameters
 # Check for parameters of 'non-standard' parameters in ${pdb_name}_1_nonprot.pdb
-#  Currently only in main dir and include/
+#  Currently only in main dir and lig/
 # TO DO: check multiple locations for non-standard res .lib, .off, .frcmod files
 #       (frcmod may not be required, but complicated to check)
 #  0. initialize a list of files to be read in by tleap later
@@ -190,16 +205,28 @@ for val in "${nonprot_res[@]}" ; do
 #  2a. check if these residues are in the user-supplied list $alt_res
 #     uses a 'hacky' check ( if [[ "${alt_res[@]}" =~ "${val} "  etc.) instead of the contains() function
    if [[ "${alt_res[@]}" =~ "${val} " || "${alt_res[${#alt_res[@]}-1]}" == "${val}" ]]; then
-#  2b. check if .off and .frcmod exist, and put them in list to load for tleap
+#  2b. check if .off (OR .prepc) and .frcmod exist, and put them in list to load for tleap
       if [ -e $val.off -a -e $val.frcmod ]; then
          echo "Using user-supplied $val.off & $val.frcmod."
-         res_loadoff="$val.off"
-         res_loadfrcmod="$val.frcmod"
+         res_loadoff="$res_loadoff $val.off"
+         res_loadfrcmod="$res_loadfrcmod $val.frcmod"
+      elif [ -e lig/$val.off -a -e lig/$val.frcmod ]; then
+         echo "Using user-supplied lig/$val.off & lig/$val.frcmod."
+         res_loadoff="$res_loadoff lig/$val.off"
+         res_loadfrcmod="$res_loadfrcmod lig/$val.frcmod"
+      elif [ -e $val.prepc -a -e $val.frcmod ]; then
+         echo "Using user-supplied $val.prepc & $val.frcmod."
+         res_loadprepc="$res_loadprepc $val.prepc"
+         res_loadfrcmod="$res_loadfrcmod $val.frcmod"
+      elif [ -e lig/$val.prepc -a -e lig/$val.frcmod ]; then
+         echo "Using user-supplied lig/$val.prepc & lig/$val.frcmod."
+         res_loadprepc="$res_loadprepc lig/$val.prepc"
+         res_loadfrcmod="$res_loadfrcmod lig/$val.frcmod"
       fi
-#  TO DO 3. check if these residues are in include/ .off/.lib files
-#      Still need to support searching through .off and .lib files
+#  TO DO Check if these residues are in include/ .off files
+#        Best also to support *searching through* .off AND .lib files
    else
-      echo "Cannot find $val.off and/or $val.frcmod for non-standard residue $val. Exiting."
+      echo "Cannot find $val.off/.prepc and/or $val.frcmod for non-standard residue $val. Exiting."
       exit
    fi 
 done   

@@ -18,7 +18,7 @@ Tested with:
 - awk version 20070501 (Mac OS)
 
 Additional recommended software requirements:
-- propka31 (see www.propka.ki.ku.dk ; Required for pKa estimation titratable residues, in presence of ligand)
+- propka31 (see www.propka.ki.ku.dk and/or https://github.com/jensengroup/propka-3.1; Required for pKa estimation titratable residues, in presence of ligand)
 
 
 ###Download the repository on Linux/UNIX/Mac :   

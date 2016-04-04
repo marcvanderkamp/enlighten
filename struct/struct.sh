@@ -125,17 +125,17 @@ fi
 #  Mostly for visualisation purposes, it is nicer to include all hydrogens..
 #   ...although this will cost more time!
 #   ...and it may lead to (unneccesary) problems
-sander -O -i minh.i -p ../$sys.top -c ../$sys.rst -o minh_$sys.log -r minh_$sys.rst -ref ../$sys.rst
+$AMBERHOME/bin/sander -O -i minh.i -p ../$sys.top -c ../$sys.rst -o minh_$sys.log -r minh_$sys.rst -ref ../$sys.rst
 # Minimize for 100 steps first
 #sander -O -i min_ibelly.i -p ../$sys.top -c ../$sys.rst -o min_$sys.log -r min_$sys.rst
-sander -O -i min_ibelly.i -p ../$sys.top -c minh_$sys.rst -o min_$sys.log -r min_$sys.rst
+$AMBERHOME/bin/sander -O -i min_ibelly.i -p ../$sys.top -c minh_$sys.rst -o min_$sys.log -r min_$sys.rst
 # Then run SA MD, in two stages
 # stage 1a (8000 steps, with restraint on CA position):
-sander -O -i sa1a.i -p ../$sys.top -c min_$sys.rst -o sa1a_$sys.log -r sa1a_$sys.rst -ref min_$sys.rst
+$AMBERHOME/bin/sander -O -i sa1a.i -p ../$sys.top -c min_$sys.rst -o sa1a_$sys.log -r sa1a_$sys.rst -ref min_$sys.rst
 # stage 1b (2000 steps of cooling, without restraint on CAs):
-sander -O -i sa1b.i -p ../$sys.top -c sa1a_$sys.rst -o sa1b_$sys.log -r sa1b_$sys.rst
+$AMBERHOME/bin/sander -O -i sa1b.i -p ../$sys.top -c sa1a_$sys.rst -o sa1b_$sys.log -r sa1b_$sys.rst
 # End with another brief minimization (100 steps)
-sander -O -i min_ibelly.i -p ../$sys.top -c sa1b_$sys.rst -o min_sa_$sys.log -r min_sa_$sys.rst
+$AMBERHOME/bin/sander -O -i min_ibelly.i -p ../$sys.top -c sa1b_$sys.rst -o min_sa_$sys.log -r min_sa_$sys.rst
 echo "Finished STRUCT protocol."
 
 

@@ -133,7 +133,6 @@ fi
 #### Run pdb4amber, reduce & propka31 on pdb, then change HIS and ASP/GLU as needed
 # Do this all in $pdb_name/ 
 # TO DO: check in ${pdb_name}_1_nonprot.pdb for residues that are not $lig_name or $alt_res
-# to do?: check for protonation of ARG/TYR? (BUT no standard amber parameters) 
 if [ ! -d "$pdb_name" ]; then
   echo "Preparing pdb (addition of hydrogens etc.)"
   mkdir $pdb_name
@@ -142,7 +141,10 @@ else
  exit
 fi
 cd $pdb_name
-pdb4amber -i ../$pdb -o ${pdb_name}_1.pdb  --nohyd --dry &> pdb4amber.log
+# Change ligand chain ID (to L)
+awk -v lig=$lig_name '{if (substr($0,18,3)==lig || $4==lig) {printf("%sL%s\n",substr($0,0,21),substr($0,23,70))} else print}' ../$pdb > ${pdb_name}_0.pdb
+# Run pdb4amber and reduce
+pdb4amber -i ${pdb_name}_0.pdb -o ${pdb_name}_1.pdb  --nohyd --dry &> pdb4amber.log
 reduce -build -nuclear ${pdb_name}_1.pdb &> ${pdb_name}_2.pdb
 # HIS tautomers selected, but not renamed in ${pdb_name}_2.pdb. 
 #  Detect which protons are present and rename to HIE/HID/HIP based on that.

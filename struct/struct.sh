@@ -73,16 +73,16 @@ cen_atname=`echo $cen_atname | xargs`
 rad_belly=10.0
 bellymask=":"$cen_resid"@"$cen_atname"<:$rad_belly"
 
-## Check ENZLIG environment variable to copy required input files
-# TO DO: prompt user to enter the direcotry and use that for ENZLIG
-if [ -z "$ENZLIG" ]; then
-  echo "Need to set environment variable ENZLIG to location of your enzlig_tools git clone."
+## Check ENLIGHTEN environment variable to copy required input files
+# TO DO: prompt user to enter the directory and use that for ENLIGHTEN
+if [ -z "$ENLIGHTEN" ]; then
+  echo "Need to set environment variable ENLIGHTEN to location of your enlighten directory (git clone)."
   echo "  Example in bash: "
-  echo "  export ENZLIG=\"/my/path/to/enzlig_tools\" "
+  echo "  export ENLIGHTEN=\"/my/path/to/enlighten\" "
   echo "Exiting..."
   exit 
-elif [ ! -d $ENZLIG/struct ]; then
-  echo "Cannot find the $ENZLIG/struct directory that contains required files. "
+elif [ ! -d $ENLIGHTEN/struct ]; then
+  echo "Cannot find the $ENLIGHTEN/struct directory that contains required files. "
   echo "Exiting..."
   exit 
 fi
@@ -101,7 +101,7 @@ if [ ! -d struct ]; then
   mkdir struct
 fi
 for name in minh min_ibelly sa1a sa1b; do
-   rsync -a $ENZLIG/struct/$name.i ../include/
+   rsync -a $ENLIGHTEN/struct/$name.i ../include/
    if [ ! -f ../include/$name.i ]; then
       echo "Can't find $name.i in include/. Cannot continue. Exiting..."
       exit

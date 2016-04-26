@@ -208,7 +208,7 @@ class enzlig(Frame):
             pymol.cmd.load("./"+temp+"/"+temp+".sp20.pdb",temp+".sp20")
             self.pdb = self.selection + ".pdb"
         self.structButton.config(state="normal")
-        os.environ["ENZLIG"]=self.entry2.get()
+        os.environ["ENLIGHTEN"]=self.entry2.get()
         
     
     def runstruct(self):

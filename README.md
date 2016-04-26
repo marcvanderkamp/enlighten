@@ -1,7 +1,11 @@
-enzlig_tools
+Enlighten
 ============
 
-Protocols and tools to run (automated) atomistic simulations of enzyme-ligand systems
+Protocols and tools to run (automated) atomistic simulations of enzyme-ligand systems.
+
+Aimed at: 
+- Experimental biochemists/enzymologists interested in gaining detailed insight into protein-ligand / enzyme-substrate complexes.
+- Biomolecular researchers that would like to perform simulations in a high(er)-throughput fashion, e.g. for testing and hypothesis generation
 
 Minimal software requirements:
 - AmberTools14 (see www.ambermd.org - Amber14.pdf manual has instructions for installation)
@@ -33,28 +37,28 @@ Copy this link
 2) Go to the command line on your Linux/Mac and cd to a suitable location to create the Repository
 Then type:
 
-git clone https://github.com/marcvanderkamp/enzlig_tools.git
+git clone https://github.com/marcvanderkamp/enlighten.git
 
-On UNIX clusters you may need to use SSH rather than HTTPS to clone the repository.
+On some UNIX clusters, you may need to use SSH rather than HTTPS to clone the repository.
 This typically means you will also need to add your public ssh key for the cluster (~/.ssh/id_rsa.pub) to your github account here: https://github.com/settings/ssh
 
 Once the public ssh key is added, you can run:
 
-git clone git@github.com:marcvanderkamp/enzlig_tools.git
+git clone git@github.com:marcvanderkamp/enlighten.git
 
 
 
-3) This will download the Repository enzlig_tools for use on your local computer. 
+3) This will download the Repository enlighten for use on your local computer. 
 
 4) Some scripts (struct.sh) in the current repository require you to set the ENZLIG environment variable to indicate the location of the repository. 
 
 In bash:
 
-export ENZLIG=/my/path/to/enzlig_tools/
+export ENZLIG=/my/path/to/enlighten/
 
 In tcsh/csh:
 
-setenv ENZLIG /my/path/to/enzlig_tools/
+setenv ENZLIG /my/path/to/enlighten/
 
 
 ## Available protocols
@@ -102,10 +106,10 @@ Two test-cases are included (see test/).
 to run prep.sh test:
 - copy 2cht_mod.pdb from test/ and optionally pre-calculated .prepc & .frcmod for CHOrismate:
   
-  rsync -a /my/path/to/enzlig_tools/test/2CHT/* .
+  rsync -a /my/path/to/enlighten/test/2CHT/* .
 - run prep.sh as follows:
   
-  /my/path/to/enzlig_tools/prep.sh 2cht_mod.pdb CHO -2
+  /my/path/to/enlighten/prep.sh 2cht_mod.pdb CHO -2
   
 NB:  2cht_mod.pdb was created from 2CHT.pdb by:
 - keeping ATOM/HETATM records from chains A,B,C only
@@ -123,10 +127,10 @@ This is a more complicated test-case, demonstrating the use of prep.sh with a SS
 to run prep.sh test:
 - copy 4euz_mod.pdb from test/ and optionally pre-calculated .prepc & .frcmod for meropenem (MEM):
 
-  rsync -a /my/path/to/enzlig_tools/test/4EUZ/* .
+  rsync -a /my/path/to/enlighten/test/4EUZ/* .
 - run prep.sh as follows:
 
-  /my/path/to/enzlig_tools/prep.sh 4euz_mod.pdb MEM -1
+  /my/path/to/enlighten/prep.sh 4euz_mod.pdb MEM -1
 
 NB: 4euz_mod.pdb was created from 4EUZ.pdb by:
 - Adding hydrogens to MEM (in PyMOL)

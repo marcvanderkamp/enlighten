@@ -1,0 +1,66 @@
+
+CPPTRAJ: Trajectory Analysis. V14.17
+    ___  ___  ___  ___
+     | \/ | \/ | \/ | 
+    _|_/\_|_/\_|_/\_|_
+INPUT: Reading Input from STDIN
+  [parm ../a137y.sp20.top]
+	Reading '../a137y.sp20.top' as Amber Topology
+  [trajin md.nc]
+	Reading 'md.nc' as Amber NetCDF
+  [distance dCC out dist.dat :MN9@C :KPI@C1]
+    DISTANCE: :MN9@C to :KPI@C1, center of mass.
+  [distance rc2a out dist.dat :729@OH :729@HH]
+    DISTANCE: :729@OH to :729@HH, center of mass.
+  [distance rc2b out dist.dat :MN9@O1 :729@HH]
+    DISTANCE: :MN9@O1 to :729@HH, center of mass.
+  [dihedral stereo out dist.dat :MN9@C :MN9@O1 :MN9@H05 :KPI@C1]
+    DIHEDRAL: [:MN9@C]-[:MN9@O1]-[:MN9@H05]-[:KPI@C1]
+              Output range is -180 to 180 degrees.
+---------- RUN BEGIN -------------------------------------------------
+
+PARAMETER FILES:
+ 0: '../a137y.sp20.top', 18983 atoms, 1378 res, box: None, 199 mol, 194 solvent, 200 frames
+
+INPUT TRAJECTORIES:
+ 0: 'md.nc' is a NetCDF AMBER trajectory, Parm ../a137y.sp20.top (reading 200 of 200)
+  Coordinate processing will occur on 200 frames.
+TIME: Run Initialization took 0.0000 seconds.
+
+BEGIN TRAJECTORY PROCESSING:
+.....................................................
+ACTION SETUP FOR PARM '../a137y.sp20.top' (4 actions):
+  0: [distance dCC out dist.dat :MN9@C :KPI@C1]
+	:MN9@C (1 atoms) to :KPI@C1 (1 atoms), imaging off.
+  1: [distance rc2a out dist.dat :729@OH :729@HH]
+	:729@OH (1 atoms) to :729@HH (1 atoms), imaging off.
+  2: [distance rc2b out dist.dat :MN9@O1 :729@HH]
+	:MN9@O1 (1 atoms) to :729@HH (1 atoms), imaging off.
+  3: [dihedral stereo out dist.dat :MN9@C :MN9@O1 :MN9@H05 :KPI@C1]
+	 [:MN9@C](1) [:MN9@O1](1) [:MN9@H05](1) [:KPI@C1](1)
+----- md.nc (1-200, 1) -----
+ 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100% Complete.
+
+Read 200 frames and processed 200 frames.
+TIME: Trajectory processing: 0.6789 s
+TIME: Avg. throughput= 294.5751 frames / second.
+
+ACTION OUTPUT:
+
+DATASETS:
+  4 data sets:
+	dCC "dCC" (double, distance), size is 200
+	rc2a "rc2a" (double, distance), size is 200
+	rc2b "rc2b" (double, distance), size is 200
+	stereo "stereo" (double, torsion), size is 200
+
+DATAFILES:
+  dist.dat (Standard Data File):  dCC rc2a rc2b stereo
+---------- RUN END ---------------------------------------------------
+TIME: Total execution time: 1.0038 seconds.
+--------------------------------------------------------------------------------
+To cite CPPTRAJ use:
+Daniel R. Roe and Thomas E. Cheatham, III, "PTRAJ and CPPTRAJ: Software for
+  Processing and Analysis of Molecular Dynamics Trajectory Data". J. Chem.
+  Theory Comput., 2013, 9 (7), pp 3084-3095.
+

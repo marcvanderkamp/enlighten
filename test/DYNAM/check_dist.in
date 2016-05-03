@@ -1,0 +1,6 @@
+parm ../a137y.sp20.top
+trajin md.nc
+distance dCC out dist.dat :MN9@C :KPI@C1
+distance rc2a out dist.dat :729@OH :729@HH
+distance rc2b out dist.dat :MN9@O1 :729@HH
+dihedral stereo out dist.dat :MN9@C :MN9@O1 :MN9@H05 :KPI@C1

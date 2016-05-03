@@ -1,0 +1,15 @@
+#/bin/bash -f
+#
+#PBS -l walltime=5:0:0
+#PBS -N a137y_sp20
+#PBS -j oe
+#
+#export AMBERHOME="/users/chmwvdk/amber14"
+#cd /users/chmwvdk/projects/bb_tools/nal/md_sp/a137y/sp20
+# 1) run struct (sa) protocol (resulting in min_sa_a137y.sp20.rst)
+# 2) md heating to 300K in 5ps
+$AMBERHOME/bin/sander -O -i heat.i -o heat.log -p a137y.sp20.top -c min_sa_a137y.sp20.rst -ref min_sa_a137y.sp20.rst -r heat.rst -x heat.nc
+# 3) md sampling at 300K for 100ps
+$AMBERHOME/bin/sander -O -i md.i -o md.log -p a137y.sp20.top -c heat.rst -ref min_sa_a137y.sp20.rst -r md.rst -x md.nc
+# 4) brief minimization (100 steps)
+$AMBERHOME/bin/sander -O -i min.i -o min.log -p a137y.sp20.top -c md.rst -ref min_sa_a137y.sp20.rst -r min.rst

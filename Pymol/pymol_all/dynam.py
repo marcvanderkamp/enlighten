@@ -65,7 +65,7 @@ else:
 
 
 # By this point the amber path and molecular system have been found and we need to run the dynamics program
-def rundynam(amber,top,res):
+def rundynam(amber,top,res,nstlim):
     # list the input files, this can eventually be embedded in this script
     heat="./heat.i"
     md="./md.i"
@@ -76,7 +76,7 @@ def rundynam(amber,top,res):
     line1 =  "100ps MD with only ibelly restraint on atoms outside 20 Ang \n"
     line2 =  "&cntrl\n"
     line3 =  " imin=0, irest=1, ntx=5, \n"
-    line4 =  " nstlim = 50, dt = 0.002, \n"
+    line4 =  " nstlim = "+str(nstlim)+", dt = 0.002, \n"
     line5 =  " ntpr=250, ntwx=250, ioutfm=1, ntwr=-12500,\n"
     line6 =  " ntf = 2, ntc = 2, tol = 0.0000005,\n"
     line7 =  " ntb=0, cut=10,\n"
@@ -125,8 +125,8 @@ def rundynam(amber,top,res):
     command = sander_full + " -O -i "+ heat + " -o " + " heat.log -p " + top + " -c " + rst + " -ref "+rst+" -r heat.rst -x heat.nc"
     p = subprocess.Popen([command], shell=True, stderr=subprocess.PIPE)
 
-
-rundynam(amber,top,rst)
+nstlim=5000
+rundynam(amber,top,rst,nstlim)
 
 #
  # def rundyynam(self):

@@ -71,6 +71,32 @@ def rundynam(amber,top,res):
     md="./md.i"
     min="./min.i"
 
+    target = open("md.i", 'w')
+    target.truncate()
+    line1 =  "100ps MD with only ibelly restraint on atoms outside 20 Ang \n"
+    line2 =  "&cntrl\n"
+    line3 =  " imin=0, irest=1, ntx=5, \n"
+    line4 =  " nstlim = 50, dt = 0.002, \n"
+    line5 =  " ntpr=250, ntwx=250, ioutfm=1, ntwr=-12500,\n"
+    line6 =  " ntf = 2, ntc = 2, tol = 0.0000005,\n"
+    line7 =  " ntb=0, cut=10,\n"
+    line8 =  " ibelly=1,\n"
+    line9 =  " bellymask=':MN9@C<:20.0',\n"
+    line10 = " ntt=1, tautp=4.0, temp0=300.0,\n"
+    line11 = "/\n"
+    target.write(line1)
+    target.write(line2)
+    target.write(line3)
+    target.write(line4)
+    target.write(line5)
+    target.write(line6)
+    target.write(line7)
+    target.write(line8)
+    target.write(line9)
+    target.write(line10)
+    target.write(line11)
+    target.close()
+
     sander='/bin/sander'
     sander_full=amber+sander
 

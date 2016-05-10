@@ -7,7 +7,7 @@ import subprocess
 
 
 def __init__(self):
-    self.menuBar.addmenuitem('Plugin', 'command', 'enzlig', label='enzlig', command=lambda: mainDialog())
+    self.menuBar.addmenuitem('Plugin', 'command', 'enzlig', label='enlighten', command=lambda: mainDialog())
 
 
 # Diaglogue lables
@@ -92,6 +92,26 @@ class enzlig(Frame):
         for x in cmd.get_names("all"):
             self.lb1.insert(END, x)
         self.lb1.config(state=DISABLED)
+
+        # Time steps for use in dynamm
+        lbl7 = Label(frame1, text="Time steps", width=12)
+        lbl7.grid(row=5, column=2)
+        self.entry7 = Entry(frame1)
+        self.entry7.grid(row=5, column=3)
+
+
+#        group = Pmw.Group(page,tag_text='Dynamics variables')
+#        group.pack(fill = 'both', expand = 1, padx = 4, pady = 5)
+#        group.grid(column=5, row=3)
+#        self.entry7 = Pmw.EntryField(group.interior(),labelpos='w',
+#                                   label_text = 'Protein Dielectric:',
+#                                   value = "2000",# str(APBSTools2.defaults['interior_dielectric']),
+#                                   validate = {'validator' : 'real',
+#                                               'min':0,}
+#                                   )
+
+        print(self.entry7)
+
         # self.vsb.config(state=DISABLED)
         frame3 = Frame(self.parent)
         frame3.grid(row=3, column=0, sticky="nsew")
@@ -265,8 +285,10 @@ class enzlig(Frame):
     # - min.i: Brief minimization(optionally performed after md.i).
     def rundynam(self):
         # heating command
-        command = self.entry3.get() + "/struct.sh " + self.pdb + " " + self.entry5.get() + " " + self.entry6.get()
-        p = subprocess.Popen([command], shell=True, stderr=subprocess.PIPE)
+        top=temp+".sp20.top"
+        rst=temp+".sp20.rst"
+
+        dynam(self.entry3,top,rst,nstlim)
         while True:
             out = p.stderr.read(1)
             if out == '' and p.poll() != None:

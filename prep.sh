@@ -34,7 +34,7 @@ pdb_name=`echo $pdb | sed -e 's,\.pdb,,' -e 's,\.PDB,,'`
 lig_name=$2    #
 lig_charge=$3
 ph=7.0         # Could be set by user (as advanced option)
-ph_offset=1.0  # Simply use 1 as offset - could perhaps also be set by user
+ph_offset=0.7  # The default offset - will be an option that can be set by user
                #   ph_offset is used because it is better to (de)protonate residues ONLY if this is very clear from predicted pKa
 prot_pka=`echo "$ph + $ph_offset" | bc`    # predicted pKa above which ASP & GLU will be protonated 
 deprot_pka=`echo "$ph - $ph_offset" | bc`  # predicted pKa below which CYS,LYS will be deprotonated
@@ -267,6 +267,8 @@ cd $pdb_name
 #  Initial part
 printf "# read in standard protein/DNA parameters and GAFF
 source leaprc.ff14SB
+source oldff/leaprc.ff14SB
+source leaprc.water.tip3p
 source leaprc.gaff
 # read in ligand parameters
 loadamberprep ../$lig_prep

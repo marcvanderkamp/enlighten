@@ -17,7 +17,7 @@ Usage="Usage: prep.sh <pdb file> <ligand name> <net ligand charge> [<non-standar
 # TO DO: Replace this with proper input parsing (&checking + usage printing, probably use flags)
 #        Potentially useful example: http://stackoverflow.com/questions/1682214/pass-list-of-variables-to-bash-script
 
-# Rudimentary input checking
+# Rudimentary input checking and variable assignment
 if [ $# -ne 3 -a $# -ne 4 ]; then
    echo $Usage
    exit
@@ -26,7 +26,7 @@ elif [ $# -eq 4 ]; then
    # Convert to array
    declare -a alt_res=($alt_res_lst)
 else
-   # initialize $alt_res as empty variable?
+   # initialize $alt_res as empty variable. Needed?
    alt_res=
 fi
 pdb=$1         # pdb WITH hydrogens on ligand!
@@ -38,6 +38,32 @@ ph_offset=0.7  # The default offset - will be an option that can be set by user
                #   ph_offset is used because it is better to (de)protonate residues ONLY if this is very clear from predicted pKa
 prot_pka=`echo "$ph + $ph_offset" | bc`    # predicted pKa above which ASP & GLU will be protonated 
 deprot_pka=`echo "$ph - $ph_offset" | bc`  # predicted pKa below which CYS,LYS will be deprotonated
+
+#### Check for presence of input pdb and for lig_name residue(s) in pdb
+if [ ! -f $pdb ]; then
+   echo "$pdb is not present. Please check and try again. Exiting..."
+   exit
+fi
+# check if there are more than 1 atoms in the ligand, exit if not
+lig_atno=`awk -v lig=$lig_name '{if (substr($0,18,3)==lig && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print}' $pdb | grep -c $lig_name`
+if [ $lig_atno -lt 2 ]; then
+  echo " Ligand $lig_name contains 1 or less atoms. Please check your command."
+  echo $Usage
+  echo "Exiting..."
+  exit
+fi
+# Count number of ligands by using residue number
+lig_num=`awk -v lig=$lig_name '{if (substr($0,18,3)==lig && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print substr($0,23,4)}' $pdb | uniq | wc -l`
+# Define lig_resn as the first ligand residue occuring (needed in case there are multiple copies of ligand in pdb)
+lig_resn=`awk -v lig=$lig_name '{if (substr($0,18,3)==lig && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print substr($0,23,4)}' $pdb | head -n 1`
+# Update lig_atno
+lig_atno=`awk -v lig=$lig_name -v lig_resid="$lig_resn" '{if (substr($0,18,3)==lig && substr($0,23,4)==lig_resid && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print}' $pdb | grep -c $lig_name`
+#lig_resn=`$lig_resn | xargs`
+# Report
+if [ $lig_num -gt 1 ]; then
+  echo "Multiple $lig_name residues in $pdb. Using residue number $lig_resn for parameterisation."
+fi
+echo "Ligand $lig_name contains $lig_atno atoms in $pdb."
 
 
 #### Check for required software ($AMBERHOME)
@@ -54,7 +80,7 @@ elif [ ! -f $AMBERHOME/bin/tleap ]; then
    echo "Cannot find tleap in $AMBERHOME/bin/. Cannot continue without. Exiting..."
    exit
 else
-# Possibly a bad way to do this... (Will be doneo better in python scripts)
+# Possibly not an ideal way to do this... (Will be done better in python scripts)
    export PATH="$PATH:$AMBERHOME/bin"
 fi
 # NB Specific checks for antechamber/sqm follow later, only when lig/$lig_name.prepc .frcmod are not present.
@@ -63,6 +89,7 @@ skip_propka31=0
 command -v propka31 >/dev/null 2>&1 || { printf >&2 "propka31 cannot be found in \$PATH.\n WARNING: all ASP/GLU will be treated as unprotonated.\n" ; skip_propka31=1; }
 
 
+echo "Starting PREP protocol in $pdb_name/"
 
 #### Ligand parameterisation
 #### Take single lig from pdb and run antechamber/parmchk2 (will be done in subdir lig/)
@@ -73,7 +100,6 @@ command -v propka31 >/dev/null 2>&1 || { printf >&2 "propka31 cannot be found in
 # TO DO: if lig.prepc already exists, prompt user to overwrite or not?
 # TO DO: check for parameters in frcmod from parmchk2 that have ATTN (and prompt user?)
 # to do: write appropriate remark in prepc & frcmod headers
-echo "Starting PREP protocol in $pdb_name/"
 if [ ! -d "lig" ]; then 
   mkdir lig
 fi
@@ -86,18 +112,8 @@ elif [ -e include/$lig_name.prepc ]; then
    echo "Found include/$lig_name.prepc and will use this. (If this is NOT what you want, rename $lig_name.prepc or ligand in pdb.)"
 else
    echo "Preparing parameters for $lig_name: lig/$lig_name.prepc"
-   # check if there are more than 1 atoms in the ligand, exit if not
-   lig_atno=`awk -v lig=$lig_name '{if (substr($0,18,3)==lig && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print}' $pdb | grep -c $lig_name`
-   if [ $lig_atno -lt 2 ]; then
-     echo " Ligand $lig_name contains 1 or less atoms. Please check your command."
-     echo $Usage
-     echo "Exiting..."
-     exit
-   else
-     echo " Ligand $lig_name contains $lig_atno atoms."
-   fi 
-   # print only the ATOM/HETATM fields for the ligand
-   awk -v lig=$lig_name '{if (substr($0,18,3)==lig && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print}' $pdb > lig/$lig_name.pdb
+   # print only the ATOM/HETATM fields for the ligand with lig_resid
+   awk -v lig=$lig_name -v lig_resid="$lig_resn" '{if (substr($0,18,3)==lig && substr($0,23,4)==lig_resid && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print}' $pdb > lig/$lig_name.pdb
    cd lig
    antechamber -i  $lig_name.pdb -fi pdb -o $lig_name.prepc -fo prepc -rn $lig_name -c bcc -nc $lig_charge
 # Check here if antechamber/sqm have run successfully
@@ -123,7 +139,7 @@ else
    cd lig
 # Run parmchk2
    parmchk2 -i $lig_name.prepc -f prepc -o $lig_name.frcmod
-# Check here if there are no ATTN warnings?
+# Check here for ATTN warnings?
    lig_frcmod="lig/$lig_name.frcmod"
    cd ..
 fi
@@ -307,6 +323,8 @@ tleap -f tleap_sp$rad_short.in &> tleap_sp$rad_short.log
 # Check for empty .top files and print warning (and exit)
 #  Put in extra checks, more informative messages?
 if [ -s ${pdb_name}.sp$rad_short.top -o -s ${pdb_name}.sp$rad_short.rst ]; then
+  echo "Generated topology (prmtop) file $pdb_name/${pdb_name}.sp$rad_short.top"
+  echo "Generated coordinate (inpcrd) file $pdb_name/${pdb_name}.sp$rad_short.rst"
   echo "Finished PREP protocol."
 else
   echo "Something went wrong, check $pdb_name/tleap_sp$rad_short.log ."

@@ -21,7 +21,7 @@ Then, follow these steps:
 1. Open PyMOL and use Plugin --> Plugin Manager.
 1. Under __*Install from local file*__ click `Choose File...` 
 2. Navigate to the enlighten/Pymol folder (where you've dowloaded the repository)
-3. Choose `Interface.zip`
+3. Choose `__init__.py`
     - If you are prompted to create a directory (e.g. /your/username/.pymol/startup), click `Yes`
     - You should then see a message: 
      

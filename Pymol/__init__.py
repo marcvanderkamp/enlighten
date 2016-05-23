@@ -219,9 +219,9 @@ class enlighten(Frame):
             # Saves the command for use
             command = self.enlightenpath.get() + "/prep.sh " + os.path.basename(
                 self.entry1.get()) + " " + self.ligandname.get() + " " + self.entry6.get()
-            #Executes the comman passed above
+            #Executes the command passed above
             p = subprocess.Popen([command], shell=True, stderr=subprocess.PIPE)
-            # This initates a wait for the output to complete before the next stage is run
+            # This intiates a wait for the output to complete before the next stage is run
             while True:
                 out = p.stderr.read(1)
                 if out == '' and p.poll() != None:
@@ -246,14 +246,16 @@ class enlighten(Frame):
             os.environ["PATH"] = os.environ["PATH"] + ":" + os.environ["AMBERHOME"] + "/bin"
             command = self.enlightenpath.get() + "/prep.sh " + self.selection + ".pdb" + " " + self.ligandname.get() +\
                       " " + self.entry6.get()
-            p = subprocess.Popen([command], shell=True, stderr=subprocess.PIPE)
+            p = subprocess.Popen([command], shell=True, stderr=subprocess.PIPE,stdout=subprocess.PIPE)
             while True:
-                out = p.stderr.read(1)
-                # if out == '' and p.poll() != None:
-                #     break
-                # if out != '':
-                sys.stdout.write(out)
-                sys.stdout.flush()
+                error = p.stderr.read(1)
+                output = p.stdout.read(1)
+                if output == '' and p.poll() != None:
+                    break
+                if output != '':
+                    sys.stdout.write(output)
+                    sys.stdout.write(error)
+                    sys.stdout.flush()
             print "Job Finished"
             temp = self.selection
             print(temp)
@@ -266,14 +268,16 @@ class enlighten(Frame):
     def runstruct(self):
         command = self.enlightenpath.get() + "/struct/struct.sh " + self.pdb + " " + self.ligandname.get() +\
                   " " + self.entry6.get()
-        p = subprocess.Popen([command], shell=True, stderr=subprocess.PIPE)
+        p = subprocess.Popen([command], shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         while True:
-            out = p.stderr.read(1)
-            #if out == '' and p.poll() != None:
-            #    break
-            #if out != '':
-            sys.stdout.write(out)
-            sys.stdout.flush()
+            error = p.stderr.read(1)
+            output = p.stdout.read(1)
+            if output == '' and p.poll() != None:
+                break
+            if output != '':
+                sys.stdout.write(output)
+                sys.stdout.write(error)
+                sys.stdout.flush()
         temp = self.pdb[:-4]
         pymol.cmd.load("./" + temp +"/"+ temp + ".sp20.rst", temp + ".sp20")
         self.dynamButton.config(state="normal")

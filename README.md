@@ -2,7 +2,7 @@ Enlighten
 ============
 
 Protocols and tools to run (automated) atomistic simulations of enzyme-ligand systems.
-For the PyMOL plugin, see [here](https://github.com/marcvanderkamp/enlighten/edit/master/Pymol/README.md)
+For the PyMOL plugin, see [here](https://github.com/marcvanderkamp/enlighten/blob/master/Pymol/README.md)
 
 Aimed at: 
 - Experimental biochemists/enzymologists interested in gaining detailed insight into protein-ligand / enzyme-substrate complexes.

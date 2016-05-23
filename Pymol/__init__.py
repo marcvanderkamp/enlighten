@@ -34,7 +34,7 @@ class enlighten(Frame):
         self.file.select()
         self.sv = IntVar()
         self.sv.set(0)
-        self.sel = Checkbutton(frame4, text="Choose from selection", command=self.selectoption2, variable=self.sv,
+        self.sel = Checkbutton(frame4, text="Choose from PyMOL object", command=self.selectoption2, variable=self.sv,
                                offvalue=0, onvalue=1)
         self.sel.grid(row=0, column=1)
         self.sel.deselect()
@@ -48,14 +48,14 @@ class enlighten(Frame):
         self.entry1.grid(row=0, column=1, columnspan=4, sticky=W + E)
         self.browserButton = Button(frame1, text="Browser", command=self.onOpenF)
         self.browserButton.grid(row=0, column=5, sticky="e")
-        lbl2 = Label(frame1, text="enlighten Folder", width=12)
+        lbl2 = Label(frame1, text="Enlighten folder", width=12)
         lbl2.grid(row=1, column=0)
         self.enlightenpath = Entry(frame1)
         self.enlightenpath.insert(END, '/Users/simonbennie/enlighten') #fixme
         self.enlightenpath.grid(row=1, column=1, columnspan=4, sticky=W + E)
         enlightenButton = Button(frame1, text="Browser", command=self.onOpen)
         enlightenButton.grid(row=1, column=5, sticky="e")
-        lbl3 = Label(frame1, text="AMBER Folder", width=12)
+        lbl3 = Label(frame1, text="AMBER folder", width=12)
         lbl3.grid(row=2, column=0)
         self.amberpath = Entry(frame1)
         self.amberpath.grid(row=2, column=1, columnspan=4, sticky=W + E)
@@ -65,7 +65,7 @@ class enlighten(Frame):
         self.amberpath.insert(0, os.environ.get('AMBERHOME', 'Please specify AMBER home directory'))
         # self.amberpath.insert(END, '/Users/simonbennie/bin/amber14') # Fixme
 
-        lbl4 = Label(frame1, text="Output Folder", width=12)
+        lbl4 = Label(frame1, text="Output folder", width=12)
         lbl4.grid(row=3, column=0)
         self.workingpath = Entry(frame1)
         self.workingpath.insert(END, '/Users/simonbennie') # Fixme
@@ -86,10 +86,10 @@ class enlighten(Frame):
         # This is where frame two starts
         frame2 = Frame(self.parent)
         frame2.grid(row=2, column=0, sticky="nsew")
-        # This next section constructs a boz plus the scroll bar and reaction to user input.
+        # This next section constructs a box plus the scroll bar and reaction to user input.
         self.vsb = Scrollbar(frame2, orient="vertical", command=self.OnVsb)
         self.vsb.grid(row=0, column=2, sticky="ns")
-        lbl7 = Label(frame2, text="List of Selection", width=12)
+        lbl7 = Label(frame2, text="List of objects", width=12)
         lbl7.grid(row=0, column=0)
         self.lb1 = Listbox(frame2, yscrollcommand=self.vsb.set)
         self.lb1.grid(row=0, column=1)
@@ -99,7 +99,7 @@ class enlighten(Frame):
             self.lb1.insert(END, x)
         self.lb1.config(state=DISABLED)
 
-        # Time steps for use in dynamm
+        # Time steps for use in dynam
         lbl7 = Label(frame1, text="Time steps (ps)", width=12)
         lbl7.grid(row=5, column=2)
         self.entry7 = Entry(frame1)

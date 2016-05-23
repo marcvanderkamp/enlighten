@@ -2,21 +2,22 @@ Enlighten
 ============
 
 Protocols and tools to run (automated) atomistic simulations of enzyme-ligand systems.
+For the PyMOL plugin, see [here](https://github.com/marcvanderkamp/enlighten/edit/master/Pymol/README.md)
 
 Aimed at: 
 - Experimental biochemists/enzymologists interested in gaining detailed insight into protein-ligand / enzyme-substrate complexes.
 - Biomolecular researchers that would like to perform simulations in a high(er)-throughput fashion, e.g. for testing and hypothesis generation
 
 Minimal software requirements:
-- AmberTools14 (see www.ambermd.org - Amber14.pdf manual has instructions for installation)
+- AmberTools14 or later (see www.ambermd.org - Amber14.pdf - or later - manual has instructions for installation)
 
-Several utitilies/programs from AmberTools14 are used for the majority of (PREP protocol) tasks.
+Several utitilies/programs from AmberTools14 (or later) are used for the majority of tasks.
 
 - Currently, the automation of protocols is only available through bash-scripts (for Linux or Mac OS X).
 All bash-scripts require awk & sed.
 NOTE: current bash-scripts are NOT fully POSIX compliant.
 
-Tested with:
+Tested with (amongst others):
 - GNU Awk 3.1.7 (Linux)
 - GNU sed version 4.2.1 (Linux)
 - awk version 20070501 (Mac OS)
@@ -93,7 +94,7 @@ dynam.sh is a shell-script that runs a simple MD protocol. This protocol typical
 
 Usage:
   dynam.sh \<pdb file\> \<ligand name\> [simulation time in ps. Default=100]
-- Requires prep.sh to be run successfully first (and directory/filenames to stay as they were when prep.sh was run)
+- Requires prep.sh AND struct.sh to be run successfully first (and directory/filenames to stay as they were when prep.sh was run)
 - Should be run in the same directory where prep.sh was run
 - To get the required input files from the cloned repository, set ENLIGHTEN environment variable; see point 4) above (User will be alerted if not SET)
 - Currently only possible to run the simulation protocols with sander (free with AmberTools14 or later)

@@ -15,7 +15,7 @@ Required:
 
 Instructions for installation of a *free* version of PyMOL:
 
-- For [Mac OSX](http://www.pymolwiki.org/index.php/Mac_Install)
+- For [Mac OS](http://www.pymolwiki.org/index.php/MAC_Install)
 - For [Linux](http://www.pymolwiki.org/index.php/Linux_Install)
 
 

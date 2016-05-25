@@ -2,28 +2,36 @@ Enlighten
 ============
 
 Protocols and tools to run (automated) atomistic simulations of enzyme-ligand systems.
-For the PyMOL plugin, see [here](https://github.com/marcvanderkamp/enlighten/blob/master/Pymol/README.md)
+For the PyMOL plugin, see [here](https://github.com/marcvanderkamp/enlighten/blob/master/Pymol/README.md).
 
-Aimed at: 
+We gratefully acknowledge funding from [BBSRC](www.bbsrc.ac.uk).
+
+Aimed at:
+ 
 - Experimental biochemists/enzymologists interested in gaining detailed insight into protein-ligand / enzyme-substrate complexes.
 - Biomolecular researchers that would like to perform simulations in a high(er)-throughput fashion, e.g. for testing and hypothesis generation
 
 Minimal software requirements:
-- AmberTools14 or later (see www.ambermd.org - Amber14.pdf - or later - manual has instructions for installation)
+
+- [AmberTools14 or later](www.ambermd.org) (the manual - Amber14.pdf or later - has instructions for installation)
 
 Several utitilies/programs from AmberTools14 (or later) are used for the majority of tasks.
 
-- Currently, the automation of protocols is only available through bash-scripts (for Linux or Mac OS X).
+Additional recommended software requirements:
+
+- propka31 (see www.propka.ki.ku.dk and/or https://github.com/jensengroup/propka-3.1; Required for pKa estimation titratable residues, in presence of ligand)
+
+
+**NB:** Currently, the automation of protocols is only available through bash-scripts (for Linux or Mac OS X).
 All bash-scripts require awk & sed.
 NOTE: current bash-scripts are NOT fully POSIX compliant.
 
 Tested with (amongst others):
+
 - GNU Awk 3.1.7 (Linux)
 - GNU sed version 4.2.1 (Linux)
 - awk version 20070501 (Mac OS)
 
-Additional recommended software requirements:
-- propka31 (see www.propka.ki.ku.dk and/or https://github.com/jensengroup/propka-3.1; Required for pKa estimation titratable residues, in presence of ligand)
 
 
 ###Download the repository on Linux/UNIX/Mac :   

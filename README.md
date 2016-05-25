@@ -4,7 +4,7 @@ Enlighten
 Protocols and tools to run (automated) atomistic simulations of enzyme-ligand systems.
 For the PyMOL plugin, see [here](https://github.com/marcvanderkamp/enlighten/blob/master/Pymol/README.md).
 
-We gratefully acknowledge funding from [BBSRC](www.bbsrc.ac.uk).
+We gratefully acknowledge funding from [BBSRC](http://www.bbsrc.ac.uk).
 
 Aimed at:
  
@@ -13,7 +13,7 @@ Aimed at:
 
 Minimal software requirements:
 
-- [AmberTools14 or later](www.ambermd.org) (the manual - Amber14.pdf or later - has instructions for installation)
+- [AmberTools14 or later](http://www.ambermd.org) (the manual - Amber14.pdf or later - has instructions for installation)
 
 Several utitilies/programs from AmberTools14 (or later) are used for the majority of tasks.
 

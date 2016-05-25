@@ -4,17 +4,25 @@ Enlighten PyMOL plugin
 PyMOL plugin to run the (automated) [protocols](https://github.com/marcvanderkamp/enlighten/blob/master/README.md) for atomistic simulations of enzyme-ligand systems.
 
 Aimed at: 
+
 - Experimental biochemists/enzymologists interested in gaining detailed insight into protein-ligand / enzyme-substrate complexes.
 
 Required:
+
 - PyMOL version 1.5.0.5 or later (for Plugin Manager)
 
-First, follow the instructions to download the complete Enlighten repository [here](https://github.com/marcvanderkamp/enlighten/blob/master/README.md)
+Instructions for installation of a *free* version of PyMOL:
+
+- For [Mac OSX](www.pymolwiki.org/index.php/Mac_Install)
+- For [Linux](www.pymolwiki.org/index.php/Linux_Install)
+
+
 
 
 ##Install the Plugin:   
 
-First ensure that the Enlighten git repository is installed, and also the required programmes (AmberTools14 or later, propka31).
+First, follow the instructions to download the complete Enlighten repository [here](https://github.com/marcvanderkamp/enlighten/blob/master/README.md).
+Thereafter, ensure that the required programmes are installed ([AmberTools14 or later](www.ambermd.org), [propka-3.1](https://github.com/jensengroup/propka-3.1)).
 
 Then, follow these steps:
 

@@ -148,7 +148,7 @@ for file in minh_$sys.rst min_$sys.rst sa1a_$sys.rst sa1b_$sys.rst min_sa_$sys.r
 #for file in min_$sys.rst sa1a_$sys.rst sa1b_$sys.rst min_sa_$sys.rst; do echo "trajin $file"; done >> make_trj.in
 # Use .trj extension (compatible with PyMOL?)
 echo "trajout sa_$sys.trj" >> make_trj.in
-cpptraj < make_trj.in > make_trj.log
+$AMBERHOME/bin/cpptraj < make_trj.in > make_trj.log
 
 # Go back to starting dir
 cd ../..

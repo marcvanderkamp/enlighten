@@ -4,7 +4,6 @@ from Tkinter import *
 import os
 import tkFileDialog
 import subprocess
-from dynam import dynamm
 
 
 def __init__(self):
@@ -106,7 +105,7 @@ class enlighten(Frame):
         self.entry7 = Entry(frame1)
         self.entry7.insert(END, '100')
         self.entry7.grid(row=5, column=3)
-        self.nstlim = int(self.entry7.get())*500  # Convert to time steps
+        self.nstlim = int(self.entry7.get())  # Convert to time steps
 
         # self.vsb.config(state=DISABLED)
         frame3 = Frame(self.parent)
@@ -326,7 +325,8 @@ class enlighten(Frame):
         sys.stdout.flush()
        # dynamm(self.amberpath.get(),self.top,self.rst,self.nstlim,belly)
         temp = self.pdb[:-4]
-        pymol.cmd.load("./" + temp + "/dynam/md_" + temp + ".sp20.trj", temp,3,"trj")
+        pymol.cmd.load("./" + temp + "/dynam/md_" + temp + ".sp20.trj", temp+".sp20",3,"trj")
+        pymol.cmd.load("./" + temp + "/dynam/min_" + temp + ".sp20.trj", temp+".sp20",4,"trj")
         print "Job Finished"
 
 def mainDialog():

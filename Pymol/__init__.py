@@ -4,6 +4,7 @@ from Tkinter import *
 import os
 import tkFileDialog
 import subprocess
+from dynam import dynamm
 
 
 def __init__(self):
@@ -16,13 +17,12 @@ class enlighten(Frame):
         Frame.__init__(self, parent)
         # Parent means the frame that is being used
         self.parent = parent  # This what calls the ezlig(root)
-        self.initUI()
+        #self.initUI()
 
         self.selection = ""
         self.pdb = ""
 
-    def initUI(self):
-        # There are four frames in the window containing varios buttons/dropdowns etc
+        # There are four frames in the window containing various buttons/dropdowns etc
         self.parent.title("Enlighten Tools")
         frame4 = Frame(self.parent)
         frame4.grid(row=0, column=0, sticky="nsew")
@@ -48,10 +48,12 @@ class enlighten(Frame):
         self.entry1.grid(row=0, column=1, columnspan=4, sticky=W + E)
         self.browserButton = Button(frame1, text="Browser", command=self.onOpenF)
         self.browserButton.grid(row=0, column=5, sticky="e")
+
         lbl2 = Label(frame1, text="Enlighten folder", width=12)
         lbl2.grid(row=1, column=0)
         self.enlightenpath = Entry(frame1)
-        self.enlightenpath.insert(END, '/Users/simonbennie/enlighten') #fixme
+        #self.enlightenpath.insert(END, '/Users/simonbennie/enlighten') #fixme
+        self.enlightenpath.insert(0, os.environ.get('ENLIGHTEN', 'Please specify ENLIGHTEN home directory'))
         self.enlightenpath.grid(row=1, column=1, columnspan=4, sticky=W + E)
         enlightenButton = Button(frame1, text="Browser", command=self.onOpen)
         enlightenButton.grid(row=1, column=5, sticky="e")
@@ -63,7 +65,6 @@ class enlighten(Frame):
         amberButton.grid(row=2, column=5, sticky="e")
         # This will auto find the amber installation from the environment variables
         self.amberpath.insert(0, os.environ.get('AMBERHOME', 'Please specify AMBER home directory'))
-        # self.amberpath.insert(END, '/Users/simonbennie/bin/amber14') # Fixme
 
         lbl4 = Label(frame1, text="Output folder", width=12)
         lbl4.grid(row=3, column=0)
@@ -100,12 +101,12 @@ class enlighten(Frame):
         self.lb1.config(state=DISABLED)
 
         # Time steps for use in dynam
-        lbl7 = Label(frame1, text="Time steps (ps)", width=12)
+        lbl7 = Label(frame1, text="Time (ps)", width=12)
         lbl7.grid(row=5, column=2)
         self.entry7 = Entry(frame1)
         self.entry7.insert(END, '100')
         self.entry7.grid(row=5, column=3)
-        self.nstlim = int(self.entry7.get())/500  # Convert to time steps
+        self.nstlim = int(self.entry7.get())*500  # Convert to time steps
 
         # self.vsb.config(state=DISABLED)
         frame3 = Frame(self.parent)
@@ -119,6 +120,7 @@ class enlighten(Frame):
         self.dynamButton = Button(frame3, text="RUN DYNAM", command=self.rundynam)
         self.dynamButton.grid(row=0, column=2, sticky="e")
         self.dynamButton.config(state=DISABLED)
+        print(enlightenButton)
 
     # This next section defines a series of dialogues that are opened according the the actions from above
     def onOpenF(self):
@@ -143,6 +145,7 @@ class enlighten(Frame):
         fold = tkFileDialog.askdirectory()
         self.enlightenpath.delete(0, 'end')
         self.enlightenpath.insert(0, fold)
+        os.environ["ENLIGHTEN"] = str(fold)
 
     def OnVsb(self, *args):
         self.lb1.yview(*args) # Moves the scroll bar
@@ -223,12 +226,16 @@ class enlighten(Frame):
             p = subprocess.Popen([command], shell=True, stderr=subprocess.PIPE)
             # This intiates a wait for the output to complete before the next stage is run
             while True:
-                out = p.stderr.read(1)
-                if out == '' and p.poll() != None:
+                output = p.stdout.read(1)
+                if output == '' and p.wait() != None:
                     break
-                if out != '':
-                    sys.stdout.write(out)
+                if output != '':
+                    sys.stdout.write(output)
                     sys.stdout.flush()
+
+            error = p.stderr.read()
+            sys.stdout.write(error)
+            sys.stdout.flush()
             print("Job Finished")
             path = os.path.split(self.entry1.get())
             temp = path[1].split('.')
@@ -248,14 +255,19 @@ class enlighten(Frame):
                       " " + self.entry6.get()
             p = subprocess.Popen([command], shell=True, stderr=subprocess.PIPE,stdout=subprocess.PIPE)
             while True:
-                error = p.stderr.read(1)
                 output = p.stdout.read(1)
-                if output == '' and p.poll() != None:
+                if output == '' and p.wait() != None:
                     break
                 if output != '':
                     sys.stdout.write(output)
-                    sys.stdout.write(error)
                     sys.stdout.flush()
+
+            error = p.stderr.read()
+            sys.stdout.write(error)
+            sys.stdout.flush()
+
+
+
             print "Job Finished"
             temp = self.selection
             print(temp)
@@ -263,21 +275,26 @@ class enlighten(Frame):
             pymol.cmd.load("./" + temp +"/" + temp +  ".sp20.pdb", temp + ".sp20") # fixme
             self.pdb = self.selection + ".pdb"
         self.structButton.config(state="normal")
-        os.environ["enlighten"] = self.enlightenpath.get()
 
     def runstruct(self):
         command = self.enlightenpath.get() + "/struct/struct.sh " + self.pdb + " " + self.ligandname.get() +\
                   " " + self.entry6.get()
+        self.config(cursor="clock")
+        self.update()
         p = subprocess.Popen([command], shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         while True:
-            error = p.stderr.read(1)
             output = p.stdout.read(1)
-            if output == '' and p.poll() != None:
+            if output == '' and p.wait() != None:
                 break
             if output != '':
                 sys.stdout.write(output)
-                sys.stdout.write(error)
                 sys.stdout.flush()
+
+        self.config(cursor="")
+        error = p.stderr.read()
+        sys.stdout.write(error)
+        sys.stdout.flush()
+
         temp = self.pdb[:-4]
         pymol.cmd.load("./" + temp +"/"+ temp + ".sp20.rst", temp + ".sp20")
         self.dynamButton.config(state="normal")
@@ -289,24 +306,32 @@ class enlighten(Frame):
     # - min.i: Brief minimization(optionally performed after md.i).
     def rundynam(self):
         # heating command
-        top=temp+".sp20.top"
-        rst=temp+".sp20.rst"
-
-        dynam(self.amberpath,top,rst,self.nstlim,self.ligandname)
+        print(self.pdb)
+        #self.top=temp+".sp20.top"
+        #self.rst=temp+".sp20.rst"
+        print(self.ligandname.get())
+        belly=self.ligandname.get()
+        command = self.enlightenpath.get() + "/dynam/sphere/dynam.sh " + self.pdb+ " "+ belly + " " + str(self.nstlim)
+        p = subprocess.Popen([command], shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         while True:
-            out = p.stderr.read(1)
-           # if out == '' and p.poll() != None:
-           #     break
-           # if out != '':
-            sys.stdout.write(out)
-            sys.stdout.flush()
+            output = p.stdout.read(1)
+            if output == '' and p.wait() != None:
+                break
+            if output != '':
+                sys.stdout.write(output)
+                sys.stdout.flush()
+
+        error = p.stderr.read()
+        sys.stdout.write(error)
+        sys.stdout.flush()
+       # dynamm(self.amberpath.get(),self.top,self.rst,self.nstlim,belly)
         temp = self.pdb[:-4]
-        pymol.cmd.load("./" + temp + "/struct/min_sa_" + temp + ".sp20.trj", temp + ".trj")
+        pymol.cmd.load("./" + temp + "/dynam/md_" + temp + ".sp20.trj", temp,3,"trj")
         print "Job Finished"
 
 def mainDialog():
     # Tk is a tinker python gui library, This is the default toolkit used in pymol
     root = Tk()
     root.resizable(0, 0)  # currently not resizable due to lack of reflow
-    enlighten(root)  # This is where the nezlig class is called, passes the parent frame
+    enlighten(root)  # This is where the enlighten class is called, passes the parent frame
     root.mainloop()

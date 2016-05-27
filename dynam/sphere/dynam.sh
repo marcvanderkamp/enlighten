@@ -139,9 +139,12 @@ elif [ ! -f $AMBERHOME/bin/sander ]; then
    exit
 fi
 # Run 5ps heating
+# Run 5ps heating
 $AMBERHOME/bin/sander -O -i heat.i -p ../$sys.top -c ../struct/min_sa_$sys.rst -o heat_$sys.log -r heat_$sys.rst -x heat_$sys.trj
+echo "Finished heating, now doing dynamics"
 # Run short md production (100ps default)
 $AMBERHOME/bin/sander -O -i md.i -p ../$sys.top -c heat_$sys.rst -o md_$sys.log -r md_$sys.rst -x md_$sys.trj
+echo "Finished dynamics, now doing minimisation"
 # End with another brief minimization (100 steps)
 $AMBERHOME/bin/sander -O -i min.i -p ../$sys.top -c md_$sys.rst -o min_$sys.log -r min_$sys.rst
 echo "Finished DYNAM protocol."

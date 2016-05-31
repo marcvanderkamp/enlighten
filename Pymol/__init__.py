@@ -7,8 +7,7 @@ import subprocess
 
 
 def __init__(self):
-    self.menuBar.addmenuitem('Plugin', 'command', 'enlighten', label='enlighten', command=lambda : mainDialog())
-
+    self.menuBar.addmenuitem('Plugin', 'command', 'enlighten', label='enlighten', command=lambda s=self: mainDialog())
 
 # Diaglogue lables
 class enlighten(Frame):
@@ -68,7 +67,8 @@ class enlighten(Frame):
         lbl4 = Label(frame1, text="Output folder", width=12)
         lbl4.grid(row=3, column=0)
         self.workingpath = Entry(frame1)
-        self.workingpath.insert(END, '/Users/simonbennie') # Fixme
+        self.workingdir=os.getcwd() #pymol.externing.pwd()
+        self.workingpath.insert(END,os.getcwd())  # Fixme
         self.workingpath.grid(row=3, column=1, columnspan=4, sticky=W + E)
         outputButton = Button(frame1, text="Browser", command=self.onOpenO)
         outputButton.grid(row=3, column=5, sticky="e")

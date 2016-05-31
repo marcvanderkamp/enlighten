@@ -215,6 +215,7 @@ class enlighten(Frame):
                 # print self.sv.get()
 
     def runprep(self):
+        pymol.cmd.set("pdb_use_ter_records", "off")
         if self.fv.get() == 1:
             os.chdir(self.workingpath.get())
             os.environ["AMBERHOME"] = self.amberpath.get()

@@ -5,6 +5,8 @@ import os
 import tkFileDialog
 import tkMessageBox
 import subprocess
+import webbrowser
+
 
 
 def __init__(self):
@@ -84,6 +86,15 @@ class enlighten(Frame):
         self.ligandcharge.insert(END, '-1')
         self.ligandcharge.grid(row=4, column=3)
 
+        # Time steps for use in dynam
+        lbl7 = Label(frame1, text="Time (ps)", width=12)
+        lbl7.grid(row=5, column=2)
+        self.entry7 = Entry(frame1)
+        self.entry7.insert(END, '100')
+        self.entry7.grid(row=5, column=3)
+        self.nstlim = int(self.entry7.get())  # Convert to time steps variable
+
+
         # This is where frame two starts
         frame2 = Frame(self.parent)
         frame2.grid(row=2, column=0, sticky="nsew")
@@ -101,19 +112,15 @@ class enlighten(Frame):
         for x in objects:
             self.lb1.insert(END, x)
 
-        # Time steps for use in dynam
-        lbl7 = Label(frame1, text="Time (ps)", width=12)
-        lbl7.grid(row=5, column=2)
-        self.entry7 = Entry(frame1)
-        self.entry7.insert(END, '100')
-        self.entry7.grid(row=5, column=3)
-        self.nstlim = int(self.entry7.get())  # Convert to time steps
+
+
+        #link = Label(frame2, text="Enlighten home", fg="blue", cursor="hand2")
+        #link.bind("<Button-1>", callback)
 
         # self.vsb.config(state=DISABLED)
         frame3 = Frame(self.parent)
         frame3.grid(row=3, column=0, sticky="nsew")
         # Three lower buttons in the plugin
-        # Check that all the data is needed for prep before allowing it to be clickable
 
 
         self.prepButton = Button(frame3, text="RUN PREP", command=self.runprep)
@@ -126,6 +133,8 @@ class enlighten(Frame):
         self.dynamButton.grid(row=0, column=2, sticky="e")
         self.dynamButton.config(state=DISABLED)
 
+        self.website = Button(frame3, text="Enlighten Website",fg="blue", command=self.callback)
+        self.website.grid(row=0, column=7, padx=50,sticky="e")
     # This next section defines a series of dialogues that are opened according the the actions from above
     def onOpenF(self):
         pdb = tkFileDialog.askopenfilename()
@@ -223,6 +232,10 @@ class enlighten(Frame):
 
                 # print self.fv.get()
                 # print self.sv.get()
+    def callback(event):
+        #Open link to enlighten
+        webbrowser.open_new("https://github.com/marcvanderkamp/enlighten/")
+
 
     def runprep(self):
 

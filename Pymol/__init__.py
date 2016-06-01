@@ -225,23 +225,16 @@ class enlighten(Frame):
                 # print self.sv.get()
 
     def runprep(self):
-        print "ligandname",self.ligandname.get(),"object", self.entry1.get()
-        print(type(self.entry1.get()), len(self.entry1.get()))
-        if self.ligandname.get() == "Ligand name":
-            print("found ligand name as %s" % self.ligandname.get())
-        if len(self.entry1.get()) == 0:
-            print("found object name as %s" % self.entry1.get())
-            print(len(self.entry1.get()))
-            print(self.selection)
-        if self.ligandname.get() == "Ligand name" or len(self.selection) == 0:
-            print(type(self.entry1.get()), len(self.entry1.get()))
-            tkMessageBox.showinfo("Error","Error missing ligand name or object")
-            return
+
+
 
         pymol.cmd.set("pdb_use_ter_records", "off")
         print("Setting the enlighten path to %s" % self.enlightenpath.get())
         os.environ["ENLIGHTEN"] = self.enlightenpath.get()
         if self.fv.get() == 1:
+            if self.ligandname.get() == "Ligand name" or len(self.entry1.get()) == 0:
+                tkMessageBox.showinfo("Error","Error missing ligand name or object")
+                return
             os.chdir(self.workingpath.get())
             os.environ["AMBERHOME"] = self.amberpath.get()
             # Saves the command for use
@@ -270,6 +263,10 @@ class enlighten(Frame):
             self.pdb = os.path.basename(self.entry1.get())
         # The difference between this and obe is the entry selection
         if self.sv.get() == 1:
+            if self.ligandname.get() == "Ligand name" or len(self.selection) == 0:
+                print(type(self.entry1.get()), len(self.entry1.get()))
+                tkMessageBox.showinfo("Error","Error missing ligand name or object")
+                return
             os.chdir(self.workingpath.get())
             print(os.chdir(self.workingpath.get()))
             cmd.save(self.workingpath.get() + "/" + self.selection + ".pdb", self.selection)

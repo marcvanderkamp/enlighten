@@ -347,7 +347,7 @@ class enlighten(Frame):
        # dynamm(self.amberpath.get(),self.top,self.rst,self.nstlim,belly)
         temp = self.pdb[:-4]
         pymol.cmd.load("./" + temp + "/dynam/md_" + temp + ".sp20.trj", temp+".sp20",3,"trj")
-        pymol.cmd.load("./" + temp + "/dynam/min_" + temp + ".sp20.rst", temp+".sp20","rst")
+        pymol.cmd.load("./" + temp + "/dynam/min_" + temp + ".sp20.rst", temp+".sp20")
 
 def mainDialog():
     # Tk is a tinker python gui library, This is the default toolkit used in pymol

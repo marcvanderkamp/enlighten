@@ -3,6 +3,7 @@ import pymol
 from Tkinter import *
 import os
 import tkFileDialog
+import tkMessageBox
 import subprocess
 
 
@@ -75,13 +76,13 @@ class enlighten(Frame):
         lbl5 = Label(frame1, text="Ligand Name", width=12)
         lbl5.grid(row=4, column=0)
         self.ligandname = Entry(frame1)
-        self.ligandname.insert(END, '0RN') # Fixme
+        self.ligandname.insert(END, 'Ligand name') # Fixme
         self.ligandname.grid(row=4, column=1)
         lbl6 = Label(frame1, text="Ligand Charge", width=12)
         lbl6.grid(row=4, column=2)
-        self.entry6 = Entry(frame1)
-        self.entry6.insert(END, '-1')
-        self.entry6.grid(row=4, column=3)
+        self.ligandcharge = Entry(frame1)
+        self.ligandcharge.insert(END, '-1')
+        self.ligandcharge.grid(row=4, column=3)
 
         # This is where frame two starts
         frame2 = Frame(self.parent)
@@ -95,9 +96,10 @@ class enlighten(Frame):
         self.lb1.grid(row=0, column=1)
         self.lb1.bind("<MouseWheel>", self.OnMouseWheel)
         self.lb1.bind("<<ListboxSelect>>", self.OnSelect)
-        for x in cmd.get_names("all"):
+        objects=cmd.get_names("all")
+        objects.extend(["Pick object"])
+        for x in objects:
             self.lb1.insert(END, x)
-        self.lb1.config(state=DISABLED)
 
         # Time steps for use in dynam
         lbl7 = Label(frame1, text="Time (ps)", width=12)
@@ -111,15 +113,18 @@ class enlighten(Frame):
         frame3 = Frame(self.parent)
         frame3.grid(row=3, column=0, sticky="nsew")
         # Three lower buttons in the plugin
+        # Check that all the data is needed for prep before allowing it to be clickable
+
+
         self.prepButton = Button(frame3, text="RUN PREP", command=self.runprep)
         self.prepButton.grid(row=0, column=0, sticky="e")
+
         self.structButton = Button(frame3, text="RUN STRUCT", command=self.runstruct)
         self.structButton.grid(row=0, column=1, sticky="e")
         self.structButton.config(state=DISABLED)
         self.dynamButton = Button(frame3, text="RUN DYNAM", command=self.rundynam)
         self.dynamButton.grid(row=0, column=2, sticky="e")
         self.dynamButton.config(state=DISABLED)
-        print(enlightenButton)
 
     # This next section defines a series of dialogues that are opened according the the actions from above
     def onOpenF(self):
@@ -168,8 +173,9 @@ class enlighten(Frame):
             self.browserButton.config(state="normal")
             self.lb1.config(state=DISABLED)
             self.lb1.delete(0, 'end')
-
-            for x in cmd.get_names("all"):
+            objects=cmd.get_names("all")
+            objects.extend(["Pick object"])
+            for x in objects:
                 self.lb1.insert(END, x)
         else:
             self.fv.set(0)
@@ -180,7 +186,9 @@ class enlighten(Frame):
             # self.vsb.config(state="normal")
             self.lb1.delete(0, 'end')
 
-            for x in cmd.get_names("all"):
+            objects=cmd.get_names("all")
+            objects.extend(["Pick object"])
+            for x in objects:
                 self.lb1.insert(END, x)
 
                 # print self.fv.get()
@@ -196,9 +204,10 @@ class enlighten(Frame):
             self.lb1.config(state="normal")
             self.lb1.delete(0, 'end')
 
-            for x in cmd.get_names("all"):
+            objects=cmd.get_names("all")
+            objects.extend(["Pick object"])
+            for x in objects:
                 self.lb1.insert(END, x)
-
         else:
             self.sv.set(0)
             self.fv.set(1)
@@ -207,21 +216,37 @@ class enlighten(Frame):
             self.lb1.config(state=DISABLED)
             # self.vsb.config(state="normal")
             self.lb1.delete(0, 'end')
-
-            for x in cmd.get_names("all"):
+            objects=cmd.get_names("all")
+            objects.extend(["Pick object"])
+            for x in objects:
                 self.lb1.insert(END, x)
 
                 # print self.fv.get()
                 # print self.sv.get()
 
     def runprep(self):
+        print "ligandname",self.ligandname.get(),"object", self.entry1.get()
+        print(type(self.entry1.get()), len(self.entry1.get()))
+        if self.ligandname.get() == "Ligand name":
+            print("found ligand name as %s" % self.ligandname.get())
+        if len(self.entry1.get()) == 0:
+            print("found object name as %s" % self.entry1.get())
+            print(len(self.entry1.get()))
+            print(self.selection)
+        if self.ligandname.get() == "Ligand name" or len(self.selection) == 0:
+            print(type(self.entry1.get()), len(self.entry1.get()))
+            tkMessageBox.showinfo("Error","Error missing ligand name or object")
+            return
+
         pymol.cmd.set("pdb_use_ter_records", "off")
+        print("Setting the enlighten path to %s" % self.enlightenpath.get())
+        os.environ["ENLIGHTEN"] = self.enlightenpath.get()
         if self.fv.get() == 1:
             os.chdir(self.workingpath.get())
             os.environ["AMBERHOME"] = self.amberpath.get()
             # Saves the command for use
             command = self.enlightenpath.get() + "/prep.sh " + os.path.basename(
-                self.entry1.get()) + " " + self.ligandname.get() + " " + self.entry6.get()
+                self.entry1.get()) + " " + self.ligandname.get() + " " + self.ligandcharge.get()
             #Executes the command passed above
             p = subprocess.Popen([command], shell=True, stderr=subprocess.PIPE)
             # This intiates a wait for the output to complete before the next stage is run
@@ -236,7 +261,6 @@ class enlighten(Frame):
             error = p.stderr.read()
             sys.stdout.write(error)
             sys.stdout.flush()
-            print("Job Finished")
             path = os.path.split(self.entry1.get())
             temp = path[1].split('.')
             # First loads the topology file
@@ -252,7 +276,7 @@ class enlighten(Frame):
             os.environ["AMBERHOME"] = self.amberpath.get()
             os.environ["PATH"] = os.environ["PATH"] + ":" + os.environ["AMBERHOME"] + "/bin"
             command = self.enlightenpath.get() + "/prep.sh " + self.selection + ".pdb" + " " + self.ligandname.get() +\
-                      " " + self.entry6.get()
+                      " " + self.ligandcharge.get()
             p = subprocess.Popen([command], shell=True, stderr=subprocess.PIPE,stdout=subprocess.PIPE)
             while True:
                 output = p.stdout.read(1)
@@ -268,9 +292,7 @@ class enlighten(Frame):
 
 
 
-            print "Job Finished"
             temp = self.selection
-            print(temp)
             pymol.cmd.load("./" + temp + "/" + temp + ".sp20.top", temp + ".sp20")
             pymol.cmd.load("./" + temp +"/" + temp +  ".sp20.pdb", temp + ".sp20") # fixme
             self.pdb = self.selection + ".pdb"
@@ -278,7 +300,7 @@ class enlighten(Frame):
 
     def runstruct(self):
         command = self.enlightenpath.get() + "/struct/struct.sh " + self.pdb + " " + self.ligandname.get() +\
-                  " " + self.entry6.get()
+                  " " + self.ligandcharge.get()
         self.config(cursor="clock")
         self.update()
         p = subprocess.Popen([command], shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
@@ -328,7 +350,6 @@ class enlighten(Frame):
         temp = self.pdb[:-4]
         pymol.cmd.load("./" + temp + "/dynam/md_" + temp + ".sp20.trj", temp+".sp20",3,"trj")
         pymol.cmd.load("./" + temp + "/dynam/min_" + temp + ".sp20.trj", temp+".sp20",4,"trj")
-        print "Job Finished"
 
 def mainDialog():
     # Tk is a tinker python gui library, This is the default toolkit used in pymol

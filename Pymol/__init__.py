@@ -119,13 +119,10 @@ class enlighten(Frame):
 
         # self.vsb.config(state=DISABLED)
         frame3 = Frame(self.parent)
-        frame3.grid(row=3, column=0, sticky="nsew")
+        frame3.grid(row=5, column=0,columnspan=3, sticky="nsew")
         # Three lower buttons in the plugin
-
-
         self.prepButton = Button(frame3, text="RUN PREP", command=self.runprep)
         self.prepButton.grid(row=0, column=0, sticky="e")
-
         self.structButton = Button(frame3, text="RUN STRUCT", command=self.runstruct)
         self.structButton.grid(row=0, column=1, sticky="e")
         self.structButton.config(state=DISABLED)
@@ -134,7 +131,7 @@ class enlighten(Frame):
         self.dynamButton.config(state=DISABLED)
 
         self.website = Button(frame3, text="Enlighten Website",fg="blue", command=self.callback)
-        self.website.grid(row=0, column=7, padx=50,sticky="e")
+        self.website.grid(row=0, column=4, padx=0,sticky="e")
     # This next section defines a series of dialogues that are opened according the the actions from above
     def onOpenF(self):
         pdb = tkFileDialog.askopenfilename()

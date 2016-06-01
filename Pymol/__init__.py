@@ -296,6 +296,7 @@ class enlighten(Frame):
         self.structButton.config(state="normal")
 
     def runstruct(self):
+        os.environ["ENLIGHTEN"] = self.enlightenpath.get()
         command = self.enlightenpath.get() + "/struct/struct.sh " + self.pdb + " " + self.ligandname.get() +\
                   " " + self.ligandcharge.get()
         self.config(cursor="clock")

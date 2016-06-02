@@ -1,5 +1,12 @@
 # Enlighten Workshop
-As an example, we will make a model of the class A beta-lactamase TEM-1 with sulbalactam. There is no crystal structure available for this case so we will use PyMOL to create a model from two different crystal structures.
+As an example, we will make a model of the class A beta-lactamase TEM-1 with sulbactam. There is no crystal structure available for the complex of TEM-1 with sulbactam, so we will use PyMOL to create a model from two different crystal structures.
+
+**NB**: Whenever text is written in a `box like this`, it is a command that should be typed on a "command line", either in a "terminal" or in the PyMOL control panel.
+
+## Preparation
+
+### Step 1
+*Step 1 is only required when doing this tutorial on your own computer*
 
 We will first obtain the Enlighten plugin from the github repository. Open a terminal and type:
  
@@ -11,8 +18,11 @@ Once the files have downloaded we need to set the ENLIGHTEN variable to indicate
 
 where /my/path/to/enlighten/ will be something like "/Users/kr8728/enlighten"
 
+-------
 
-Start PyMOL:
+
+### Step 2
+Open PyMOL. On the Linux PCs in MVB 2.11, this can be done by opening a "terminal" (click on top left icon on a Linux PC) and in this "terminal", type:
 
 `pymol`
 
@@ -36,6 +46,8 @@ A message will appear to say that the plugin has been successfull installed. Exi
 
 ![](successful_install.png)
 
+
+## Part 1: Making a TEM-1-Sulbactam model
 We will use PyMOL to obtain the crystal structures we need directly from the protein databank. In the control panel type:
 
 `fetch 1BTL`
@@ -46,7 +58,7 @@ A crystal structure will appear in the viewing window. You will also see an obje
 
 `fetch 4FH2`
 
-A second structure will appear, partly overlapping the first. We now need to align the structures so that we can use the coordinates of sulbalactam from 4FH2.
+A second structure will appear, partly overlapping the first. We now need to align the structures so that we can use the coordinates of sulbactam from 4FH2.
 
 ![](1BTL_4FH2.png)
 
@@ -57,7 +69,7 @@ You will see that structure 4FH2 move so that it is aligned with 1BTL based on t
 
 ![](alignment.png)
 
-We will now create a new PyMOL object which has the protein coordinates from PDB 1BTL and the coordinates of sulbalactam from PDB 4FH2. The residue name for sulbalactam is 0RN.
+We will now create a new PyMOL object which has the protein coordinates from PDB 1BTL and the coordinates of sulbactam from PDB 4FH2. The residue name for sulbactam is 0RN.
 
 `select tmp, 1BTL (or 4FH2 and resname 0RN)`
 
@@ -73,7 +85,7 @@ We need to tidy up the structure a little bit before we can begin simulations. F
 
 `remove (1btl_0rn and resname SO4)`
 
-We also need to remove the water molecules that were part of 1BTL in the region we have just placed sulbalactam. To do this we need to identlfy the water molecules overlapping with 0RN in our new model 1btl_0rn.  Now we will zoom in on the ligand.
+We also need to remove the water molecules that were part of 1BTL in the region we have just placed sulbactam. To do this we need to identlfy the water molecules overlapping with 0RN in our new model 1btl_0rn.  Now we will zoom in on the ligand.
 
 `select 0RN, (1btl_0rn and resname 0RN)`
 
@@ -110,19 +122,21 @@ or go to the A button for the HOH object and choose remove atoms.
  
 
 
-We will now add hydrogen atoms to sulbalactam using the h_add function in PyMOL. 
+We will now add hydrogen atoms to sulbactam using the h_add function in PyMOL. 
 
 `h_add (1btl_0rn and resname 0RN)`
 
 ![](h_Add_0RN.png)
 
-Note that sulbalactam has a charge of -1*e* and you will need to check visually to make sure that they have been placed reasonably.
+Note that sulbactam has a charge of -1*e* and you will need to check visually to make sure that they have been placed reasonably.
  
 For ease of identification during simulations we will change the chain id for the ligand 0RN.
 
 `alter 0RN, chain="L"`
 
-We have everything need to create a model of the wild-type TEM-1 with sulbalactam. 
+We have now done everything needed to create a model of the wild-type TEM-1 with sulbactam that can be used as input for *Enlighten*.
+
+## Part 2: Running the *Enligthen* protocols through the plugin 
 Go to the Plugin drop-down menu and choose "enlighten".
 We are now ready to use Enlighten to perform some simulations. 
 From the plugin menu choose enlighten:
@@ -149,6 +163,7 @@ The STRUCT protocol will take a few minutes to run and when it has finished a ne
 
 This will take some time to run, so we will now start to prepare our mutant model.
 
+## Part 3: Creating a mutant
 
 We will now create a mutant structure for to simulate for comparison. We will make the R244T mutation, which causes a 300-fold increase in *Ki* for sulbactam. See <http:www.jbc.org/content/267/29/20600.full.pdf> for the experimental details.
 
@@ -192,20 +207,29 @@ Zoom in on sulbalactam and see which residues are in the binding site. Click on 
 ![](dist_ser.png)
 
 
-We can use some of the analysis tools available as part of AmberTools to get some more meaningful information from the simulations. We will now calculate the root-mean square fluctuations (RMSF) of the protein, a measure of the 'flexibiltiy' of the protein, and also perform a binding energy calculation using the MM-GBSA method. 
+## Part 4: Analysis
 
-Open a new terminal and move into the dynam subdirectory of the main output directory for the wild type model.
+We can use some of the analysis tools available as part of AmberTools to get some more meaningful information from the simulations. 
 
-`cd Users/kr8728/WORKSHOP0106/1btl_0rn/dynam`
+Here, we will calculate the root-mean square fluctuations (RMSF) of the protein, a measure of the 'flexibiltiy' of the protein, and also perform a binding energy calculation using the MM-GBSA method. 
+*These are examples of analysis that could be added to the Enlighten plugin in the near future.*
+
+Open a new terminal and move into the dynam subdirectory of the main output directory for the wild type model, by typing:
+
+`cd $WORKDIR/1btl_0rn/dynam`
 
 Copy the analysis script to the dynam directory:
 
 `cp $ENLIGHTEN/analysis/run_analysis.sh .`
 
-The analyis script need to be passed the pdb name for the system and the ligand name. To perform the analysis type:
+The analyis script needs to be given the pdb name for the system and the ligand name. To perform the analysis type:
 
 `bash run_analysis.sh 1btl_0rn.pdb 0RN`
 
+<<<<<<< HEAD
+These calculations will take a few minutes to run.
+The rmsf calculation will produce a file called rmsf\_all_1btl\_0rn.pdb with the RMSF data included in the b-factor column of the pdb. Open this pdb file in PyMOL. Display as cartoon and then choose colour by b-factor to view the RMSF analysis.
+=======
 These calculations may take a few minutes to run. The results of the MM-GBSA will appear on screen when the calculations finish e.g. "Average binding energy (MM-GBSA): -36.7273 +/- 6.0960 kcal/mol (standard error of mean 3.0480 kcal/mol)". This information is also contained in the file "FINAL\_RESULTS\_MMPBSA.dat". 
 
 The RMSF calculation will produce a file called rmsf\_all_1btl\_0rn.pdb with the RMSF data included in the b-factor column of the pdb. Open this pdb file in PyMOL. Display as cartoon and then choose colour by b-factor to view the RMSF analysis.
@@ -239,7 +263,27 @@ If you have time:
 - Look at the residues close to the sulbalactam and choose a different residue to mutate. Does the mutation alter the predicted binding energy?
 
 
+>>>>>>> 85393f4a0e228b685a2252526f85e31f298e4fec
 
+Now, you can repeat the analysis for the mutant model that you generated and ran the *Enlighten* protocols for.
+Do this by repeating the steps of the analysis above, but now in the directory for the mutant. So you may start with:
+
+`cd $WORKDIR/1btl_0rn_r244t/dynam`
+
+You can now compare your results obtained for WT TEM-1 and the mutant.
+
+-----------
+
+
+__When you have come to the end of the tutorial and explored *Enlighten* in some detail, please fill out the *[feedback survey](http://goo.gl/forms/UDIJO32AIkU44R1D3)* !__
+
+Results from the survey will influence future priorities for further development, so your views are important.
+
+If you have in-depth feedback or thoughts about Enlighten you would like to share, please get in touch.
+
+Bugs in the Enlighten plugin or scripts can be reported as an "Issue" through the [github site](https://github.com/marcvanderkamp/enlighten/issues).
+
+### Thank you!
 
 
 

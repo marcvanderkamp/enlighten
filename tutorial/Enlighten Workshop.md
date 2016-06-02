@@ -79,11 +79,11 @@ We also need to remove the water molecules that were part of 1BTL in the region 
 
 The new object 0RN will appear in the right-hand panel. Click on the S button and choose sticks from the drop down menu. 
 
-![](0rn_sticks.png)
+![](0RN_sticks.png)
 
 This will show the ligand in stick form. From the menu that appears when you click the A button for this object choose zoom. 
 
-![](0rn_zoom.png)
+![](0RN_zoom.png)
 
 ![](0rn_zoomed_in.png)
 

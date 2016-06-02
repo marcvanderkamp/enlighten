@@ -49,7 +49,7 @@ A message will appear to say that the plugin has been successfull installed. Exi
 ![](successful_install.png)
 
 
-## Part 1: Making a TEM-1-Sulbactam model
+## Part 1: Making a model of the TEM-1-Sulbactam complex
 We will use PyMOL to obtain the crystal structures we need directly from the protein databank. In the control panel type:
 
 `fetch 1BTL`
@@ -138,7 +138,7 @@ For ease of identification during simulations we will change the chain id for th
 
 We have now done everything needed to create a model of the wild-type TEM-1 with sulbactam that can be used as input for *Enlighten*.
 
-## Part 2: Running the *Enligthen* protocols through the plugin 
+## Part 2: Running the *Enlighten* protocols through the plugin 
 Go to the Plugin drop-down menu and choose "enlighten".
 We are now ready to use Enlighten to perform some simulations. 
 From the plugin menu choose enlighten:
@@ -165,9 +165,9 @@ The STRUCT protocol will take a few minutes to run and when it has finished a ne
 
 This will take some time to run, so we will now start to prepare our mutant model.
 
-## Part 3: Creating a mutant
+## Part 3: Creating a mutant and running *Enlighten*
 
-We will now create a mutant structure for to simulate for comparison. We will make the R244T mutation, which causes a 300-fold increase in *Ki* for sulbactam. See <http:www.jbc.org/content/267/29/20600.full.pdf> for the experimental details.
+We will now create a mutant structure for to simulate for comparison. We will make the R244T mutation, which causes a 300-fold increase in *Ki* for sulbactam (*i.e.* a decrease in binding affinity). See <http:www.jbc.org/content/267/29/20600.full.pdf> for the experimental details.
 
 We will start by copying our object 1btl\_0rn to the new object 1btl\_0rn_r244t.
 

@@ -24,7 +24,7 @@ We now need to load the enlighten plugin into pymol. From the Plugin drop-down m
 
 ![](Plugin_manager.png)
 
-In the Plugin manager choose the Install New Plugin tab and then select install from local file. When you click on the "Choose file" button you will need to navigate to the enlighten directory and then choose the Pymol sub-folder. Click on the __init__.py file and choose Open to install the plugin.
+In the Plugin manager choose the Install New Plugin tab and then select install from local file. When you click on the "Choose file" button you will need to navigate to the enlighten directory and then choose the Pymol sub-folder. Click on the \_init_.py file and choose Open to install the plugin.
 
 ![](enlighten_directory.png)
 
@@ -123,7 +123,7 @@ For ease of identification during simulations we will change the chain id for th
 `alter 0RN, chain="L"`
 
 We have everything need to create a model of the wild-type TEM-1 with sulbalactam. 
-Go to the Plugin drop-down menu and choose "enlighten"
+Go to the Plugin drop-down menu and choose "enlighten".
 We are now ready to use Enlighten to perform some simulations. 
 From the plugin menu choose enlighten:
 
@@ -152,7 +152,7 @@ This will take some time to run, so we will now start to prepare our mutant mode
 
 We will now create a mutant structure for to simulate for comparison. We will make the R244T mutation, which causes a 300-fold increase in *Ki* for sulbactam. See <http:www.jbc.org/content/267/29/20600.full.pdf> for the experimental details.
 
-We will start by copying our object 1btl_0rn to the new object 1btl_0rn_r244t.
+We will start by copying our object 1btl\_0rn to the new object 1btl\_0rn_r244t.
 
 `create 1btl_0rn_r244t, 1btl_0rn`
 
@@ -181,7 +181,7 @@ From the plugin menu choose enlighten:
 
 ![](plugin_menu.png)
 
-A new enlighten control panel will appear. To run simulations on the mutant model you will need to select the new 1btl_0rn_r244t object from the list and then click RUN PREP. Follow the same procedure to RUN STRUCT and DYNAM for the mutant model. 
+A new enlighten control panel will appear. To run simulations on the mutant model you will need to select the new 1btl\_0rn_r244t object from the list and then click RUN PREP. Follow the same procedure to RUN STRUCT and DYNAM for the mutant model. 
 
 We can use some of the analysis tools available as part of AmberTools to get some more meaningful information from the simulations. We will now calculate the root-mean square fluctuations (RMSF) of the protein, a measure of the 'flexibiltiy' of the protein, and also perform a binding energy calculation using the MM-GBSA method. 
 
@@ -198,7 +198,7 @@ The analyis script need to be passed the pdb name for the system and the ligand 
 `bash run_analysis.sh 1btl_0rn.pdb 0RN`
 
 These calculations may take a few minutes to run.
-The rmsf calculation will produce a file called rmsf_all_1btl_0rn.pdb with the RMSF data included in the b-factor column of the pdb. Open this pdb file in PyMOL. Display as cartoon and then choose colour by b-factor to view the RMSF analysis.
+The rmsf calculation will produce a file called rmsf\_all_1btl\_0rn.pdb with the RMSF data included in the b-factor column of the pdb. Open this pdb file in PyMOL. Display as cartoon and then choose colour by b-factor to view the RMSF analysis.
 
 
 

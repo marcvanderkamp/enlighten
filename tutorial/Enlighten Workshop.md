@@ -18,11 +18,11 @@ Start PyMOL:
 
 Two windows will appear: a viewing window and a control panel. 
 
-![](PyMOL_startup.png)
+![](PyMOL_Startup.png)
 
 We now need to load the enlighten plugin into pymol. From the Plugin drop-down menu choose Plugin and then Plugin Manager.
 
-![](plugin_manager.png)
+![](Plugin_manager.png)
 
 In the Plugin manager choose the Install New Plugin tab and then select install from local file. When you click on the "Choose file" button you will need to navigate to the enlighten directory and then choose the Pymol sub-folder. Click on the __init__.py file and choose Open to install the plugin.
 

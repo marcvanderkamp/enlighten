@@ -53,11 +53,12 @@ On the next lines, the user is asked to put in the paths to several directories 
 - **enlighten folder**: the full path of the directory where the enlighten repository was downloaded, e.g. `/Users/myname/enlighten`
 - **AMBER folder**: The full path of the directory where AmberTools was installed, e.g. `/Users/myname/amber16` (i.e. the AMBERHOME directory, used to obtain the location of the AmberTools programs)
 - **Output folder**: The path to the directory where the output files for the protocols should be kept. 
-	- __*Note:*__ the PREP protocol will generate a directory within this directory, based on the name of the pdb or selection used. The other protocols will also use this directory.
-
+	- __*Note:*__ the PREP protocol will generate a directory within this directory, based on the name of the pdb or PyMOL object used. The other protocols will also use this directory.
+-  **Ligand name**: This should be the three-character residue name of the ligand as it is named in the pdb/PyMOL object.
+-  **Ligand charge**: The net charge of the ligand (according to the hydrogens added). This is very important, as a wrong charge will cause problems with parameterisation.
+-  **Time (ps)**: *Only relevant for the DYNAM protocol* - this is the simulation time. If >100, it will typically take a long time for the DYNAM protocol to finish.
  
- 
- _Further instructions to follow..._
+ _See further the [tutorial](https://github.com/marcvanderkamp/enlighten/blob/master/tutorial/Enlighten%20Workshop.md)_
 
 
 
@@ -81,4 +82,4 @@ DYNAM runs a simple MD protocol. This protocol typically takes >30 min (on a sin
 
 
 ## Tutorial
-*To follow...*
+*Please see [here](https://github.com/marcvanderkamp/enlighten/blob/master/tutorial/Enlighten%20Workshop.md) for the tutorial.*

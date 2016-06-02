@@ -111,10 +111,13 @@ dynam.sh uses sander input files that are available in dynam/sphere, where BELLY
 - heat.i: Brief heating (only 5ps MD), meant to run with output from struct.sh (min_sa_*.rst) .
 - md.i: 100 ps NVT MD, to follow heat.i. Writes and keeps restart files every 25ps (12500 steps).
 - min.i: Brief minimization (optionally performed after md.i). 
+
 ### ANALYSIS
 See analysis/run\_analysis.sh
+
 Usage:
 run_analysis.sh \<pdb file\> \<ligand name\>
+
 - Requires prep.sh, struct.sh AND dynam.sh to be run successfully first (and directory/filenames to stay as they were when prep.sh was run)
 - Should be run in the same directory as the output from dynam.sh. 
 - Calculates the RMSF to the average structure and produces a pdb for viewing. 

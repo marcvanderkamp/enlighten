@@ -181,7 +181,16 @@ From the plugin menu choose enlighten:
 
 ![](plugin_menu.png)
 
-A new enlighten control panel will appear. To run simulations on the mutant model you will need to select the new 1btl\_0rn_r244t object from the list and then click RUN PREP. Follow the same procedure to RUN STRUCT and DYNAM for the mutant model. 
+A new enlighten control panel will appear. To run simulations on the mutant model you will need to select the new 1btl\_0rn_r244t object from the list and then click RUN PREP. Follow the same procedure to RUN STRUCT and DYNAM for the mutant model. Note that during PREP AMBER will renumber the resides so the residue number of the mutant Thr will no longer be 244 in the new "1btl\_0rn\_r244t.sp20" object.
+
+The MD trajectory will automatically be loaded into the 1btl\_0rn.sp20 object. Press the play button to move between the frames. You can adjust the number of frames per second in the Movie drop-down menu. You can use the measurement function in the Wizard menu to monitor distances during the MD simulation. 
+
+![](measurement_wizard.png)
+
+Zoom in on sulbalactam and see which residues are in the binding site. Click on two atoms to measure the distance and then press play to see how the distance changes over the simulation. In the example shown, one of the carboyxlate oxygens of sulbalactam forms a hydrogen bond with Ser210. 
+
+![](dist_ser.png)
+
 
 We can use some of the analysis tools available as part of AmberTools to get some more meaningful information from the simulations. We will now calculate the root-mean square fluctuations (RMSF) of the protein, a measure of the 'flexibiltiy' of the protein, and also perform a binding energy calculation using the MM-GBSA method. 
 

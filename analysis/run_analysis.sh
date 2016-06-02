@@ -40,8 +40,8 @@ elif [ ! -f $AMBERHOME/bin/pdb4amber ]; then
 elif [ ! -f $AMBERHOME/bin/cpptraj ]; then
    echo "Cannot find cpptraj in $AMBERHOME/bin/. Cannot continue without. Exiting..."
    exit
-elif [ ! -f $AMBERHOME/bin/ante-mmpbsa.py ]; then
-   echo "Cannot find ante-mmpbsa.py in $AMBERHOME/bin/. Cannot continue without. Exiting..."
+elif [ ! -f $AMBERHOME/bin/ante-MMPBSA.py ]; then
+   echo "Cannot find ante-MMPBSA.py in $AMBERHOME/bin/. Cannot continue without. Exiting..."
    exit
 elif [ ! -f $AMBERHOME/bin/MMPBSA.py ]; then
    echo "Cannot find MMPBSA.py in $AMBERHOME/bin/. Cannot continue without. Exiting..."
@@ -70,8 +70,8 @@ awk '{if ($1=="ATOM" && $5>="$resno") print}' min_$sys2.pdb  >> rmsf_all_$sys.pd
 if [ -e complex.top ] && [ -e receptor.top ] && [ -e ligand.top ] ; then
    echo "Found separate topology files for complex, receptor and ligand and will use these. (If this is NOT what you want, delete these files and run again.)"
 fi
-  nice $AMBERHOME/bin/ante-mmpbsa.py -p ../$top -c complex.top -s ":WAT"
-  nice $AMBERHOME/bin/ante-mmpbsa.py -p complex.top -r receptor.top -l ligand.top -n ":$lig_name"
+  nice $AMBERHOME/bin/ante-MMPBSA.py -p ../$top -c complex.top -s ":WAT"
+  nice $AMBERHOME/bin/ante-MMPBSA.py -p complex.top -r receptor.top -l ligand.top -n ":$lig_name"
   nice $AMBERHOME/bin/cpptraj -p ../$top -y md_$sys2.rst_12500 -x md.crd_12500
   nice $AMBERHOME/bin/cpptraj -p ../$top -y md_$sys2.rst_25000 -x md.crd_25000
   nice $AMBERHOME/bin/cpptraj -p ../$top -y md_$sys2.rst_37500 -x md.crd_37500

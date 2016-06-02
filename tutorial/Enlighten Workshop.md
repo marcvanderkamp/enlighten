@@ -166,7 +166,7 @@ From the Wizard drop-down menu, select mutagenesis:
 
 Click on Arg244 and then  In the right hand panel choose Thr from the mutate to menu in the right-hand panel. 
 
-![](mut_sele_thr.png)
+![](Mut_sele_thr.png)
 
 The lowest energy rotamer will then be displayed. 
 
@@ -197,8 +197,39 @@ The analyis script need to be passed the pdb name for the system and the ligand 
 
 `bash run_analysis.sh 1btl_0rn.pdb 0RN`
 
-These calculations may take a few minutes to run.
-The rmsf calculation will produce a file called rmsf\_all_1btl\_0rn.pdb with the RMSF data included in the b-factor column of the pdb. Open this pdb file in PyMOL. Display as cartoon and then choose colour by b-factor to view the RMSF analysis.
+These calculations may take a few minutes to run. The results of the MM-GBSA will appear on screen when the calculations finish e.g. "Average binding energy (MM-GBSA): -36.7273 +/- 6.0960 kcal/mol (standard error of mean 3.0480 kcal/mol)". This information is also contained in the file "FINAL\_RESULTS\_MMPBSA.dat". 
+
+The RMSF calculation will produce a file called rmsf\_all_1btl\_0rn.pdb with the RMSF data included in the b-factor column of the pdb. Open this pdb file in PyMOL. Display as cartoon and then choose colour by b-factor to view the RMSF analysis.
+
+![](colour_by_bfact.png)
+
+Highlight the position of the sulbalactam by showing it in stick representation. The dark blue regions are the protein that was fixed during the simulations, the more flexible regions are green and orange with a small part that is coloured red.
+
+
+![](rmsf_output.png)
+
+You can also plot the RMSF data against residue number. To do this open the file "rmsf_ca.dat" with LibreOffice or EXCEL.
+
+![](rmsf_plot.png)
+
+When the MD simulation of the R244T model has finished change into the dynam directory for that simulation and copy the run_analysis.sh script to this directory.
+
+`cd ../../1btl_0rn_r244t/dynam`
+
+`cp $ENLIGHTEN/analysis/run_analysis.sh .`
+
+Run the analysis of this simulation by typing:
+
+`bash run_analysis.sh 1btl_0rn_r244t.pdb 0RN`
+
+Does the mutation alter the predicted binding energy? Is it more or less favourable than the wild-type? Does the mutation alter the flexibility (RMSF) of the residues?
+
+If you have time:
+
+- Run the MD simulations for the wild-type or mutant models again (in a different directory). Do you get the same values for the binding energy?
+- Look at the residues close to the sulbalactam and choose a different residue to mutate. Does the mutation alter the predicted binding energy?
+
+
 
 
 

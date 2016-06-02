@@ -18,23 +18,23 @@ Start PyMOL:
 
 Two windows will appear: a viewing window and a control panel. 
 
-![](/Users/kr8728/enlighten/tutorial/PyMOL_startup.png)
+![](PyMOL_startup.png)
 
 We now need to load the enlighten plugin into pymol. From the Plugin drop-down menu choose Plugin and then Plugin Manager.
 
-![](/Users/kr8728/enlighten/tutorial/plugin_manager.png)
+![](plugin_manager.png)
 
 In the Plugin manager choose the Install New Plugin tab and then select install from local file. When you click on the "Choose file" button you will need to navigate to the enlighten directory and then choose the Pymol sub-folder. Click on the __init__.py file and choose Open to install the plugin.
 
-![](/Users/kr8728/enlighten/tutorial/enlighten_directory.png)
+![](enlighten_directory.png)
 
 A new window will pop-up asking you to select a plugin directory. Choose the first option and click OK.
 
-![](/Users/kr8728/enlighten/tutorial/select_plugin_directory.png)
+![](select_plugin_directory.png)
 
 A message will appear to say that the plugin has been successfull installed. Exit the Plugin manager.
 
-![](/Users/kr8728/enlighten/tutorial/successful_install.png)
+![](successful_install.png)
 
 We will use PyMOL to obtain the crystal structures we need directly from the protein databank. In the control panel type:
 
@@ -42,20 +42,20 @@ We will use PyMOL to obtain the crystal structures we need directly from the pro
 
 A crystal structure will appear in the viewing window. You will also see an object called 1BTL appear in the right-hand viewing panel. There are buttons A,S,H etc. which contain drop down menus that allow you to make changes to how the object is viewed. 
 
-![](/Users/kr8728/enlighten/tutorial/1BTL_load.png)
+![](1BTL_load.png)
 
 `fetch 4FH2`
 
 A second structure will appear, partly overlapping the first. We now need to align the structures so that we can use the coordinates of sulbalactam from 4FH2.
 
-![](/Users/kr8728/enlighten/tutorial/1BTL_4FH2.png)
+![](1BTL_4FH2.png)
 
 
 `align 4FH2 and name CA, 1BTL and name CA`
 
 You will see that structure 4FH2 move so that it is aligned with 1BTL based on the positions of the alpha carbons.
 
-![](/Users/kr8728/enlighten/tutorial/alignment.png)
+![](alignment.png)
 
 We will now create a new PyMOL object which has the protein coordinates from PDB 1BTL and the coordinates of sulbalactam from PDB 4FH2. The residue name for sulbalactam is 0RN.
 
@@ -63,13 +63,13 @@ We will now create a new PyMOL object which has the protein coordinates from PDB
 
 `create 1btl_0rn, tmp`
 
-![](/Users/kr8728/enlighten/tutorial/1btl_0rn.png)
+![](1btl_0rn.png)
 
 We now have a new object in the right-hand panel of the viewing window called 1btl_0rn. Hide the original structures 1BTL and 4FH2 by clicking on their names in the right-hand panel.
 We need to tidy up the structure a little bit before we can begin simulations. Firstly, we need to remove an SO4 ion that is present from the crystalisation conditions. Information about the crystalisation conditions and other small molecules that have been identified in the structure is given in the header of the PDB and also on the structure page of the Protein databank: <http://www.rcsb.org/pdb/explore/explore.do?structureId=1BTL>
 
 
-![](/Users/kr8728/enlighten/tutorial/SO4.png)
+![](SO4.png)
 
 `remove (1btl_0rn and resname SO4)`
 
@@ -79,13 +79,13 @@ We also need to remove the water molecules that were part of 1BTL in the region 
 
 The new object 0RN will appear in the right-hand panel. Click on the S button and choose sticks from the drop down menu. 
 
-![](/Users/kr8728/enlighten/tutorial/0rn_sticks.png)
+![](0rn_sticks.png)
 
 This will show the ligand in stick form. From the menu that appears when you click the A button for this object choose zoom. 
 
-![](/Users/kr8728/enlighten/tutorial/0rn_zoom.png)
+![](0rn_zoom.png)
 
-![](/Users/kr8728/enlighten/tutorial/0rn_zoomed_in.png)
+![](0rn_zoomed_in.png)
 
 We will now identify the water molecules.
 
@@ -93,7 +93,7 @@ We will now identify the water molecules.
 
 This command will select 4 water molecules, you may wish to zoom on the HOH object to see them better. You can also change how the water molecules are displayed e.g. choose spheres from the drop-down menu that appears when you click on the S button for the HOH object. 
 
-![](/Users/kr8728/enlighten/tutorial/waters.png)
+![](waters.png)
  
 Click on the water molecules to find their residue numbers. This information will appear in the control window e.g. 
 
@@ -106,7 +106,7 @@ When the residue numbers of all 4 water molecules have been identified they can 
 
 or go to the A button for the HOH object and choose remove atoms.
 
-![](/Users/kr8728/enlighten/tutorial/remove_atoms.png)
+![](remove_atoms.png)
  
 
 
@@ -114,7 +114,7 @@ We will now add hydrogen atoms to sulbalactam using the h_add function in PyMOL.
 
 `h_add (1btl_0rn and resname 0RN)`
 
-![](/Users/kr8728/enlighten/tutorial/h_Add_0RN.png)
+![](h_Add_0RN.png)
 
 Note that sulbalactam has a charge of -1*e* and you will need to check visually to make sure that they have been placed reasonably.
  
@@ -127,24 +127,24 @@ Go to the Plugin drop-down menu and choose "enlighten"
 We are now ready to use Enlighten to perform some simulations. 
 From the plugin menu choose enlighten:
 
-![](/Users/kr8728/enlighten/tutorial/plugin_menu.png)
+![](plugin_menu.png)
 
 A new enlighten control panel will appear. Some settings will be given as a default, but they can be changed if necessary. Click on the choose from PyMol object box and select 1btl_0rn, our wild-type model. You will need to change Ligand name to 0RN. Check that the other output settings are suitable and then click RUN PREP.
 
-![](/Users/kr8728/enlighten/tutorial/enlighten_menu.png)
+![](enlighten_menu.png)
 
 RUN PREP may take a couple of minutes to complete. When it is finished a new object "1btl_0rn.sp20" will be loaded into PyMOL. You will see that hydrogens have been added to the system and a solvent cap of radius 20 Å has been added to the model.
 
-![](/Users/kr8728/enlighten/tutorial/prep_finished.png)
+![](prep_finished.png)
 
 We now need to let the model system 'relax' to remove any bad contacts present in the crystal structure. Click RUN STRUCT to perform the next stage of simulation.
 
 
-![](/Users/kr8728/enlighten/tutorial/run_struct.png)
+![](run_struct.png)
 
 The STRUCT protocol will take a few minutes to run and when it has finished a new structure will be loaded into the "1btl_0rn.sp20" object and the RUN DYNAM button will become active. Click RUN DYNAM to start the dynamics simulation.
 
-![](/Users/kr8728/enlighten/tutorial/run_dynam.png)
+![](run_dynam.png)
 
 
 This will take some time to run, so we will now start to prepare our mutant model.
@@ -162,24 +162,24 @@ We want to mutate Arg244 to Thr, so we will zoom in on this residue.
 
 From the Wizard drop-down menu, select mutagenesis:
 
-![](/Users/kr8728/enlighten/tutorial/wizard_menu.png)
+![](wizard_menu.png)
 
 Click on Arg244 and then  In the right hand panel choose Thr from the mutate to menu in the right-hand panel. 
 
-![](/Users/kr8728/enlighten/tutorial/mut_sele_thr.png)
+![](mut_sele_thr.png)
 
 The lowest energy rotamer will then be displayed. 
 
-![](/Users/kr8728/enlighten/tutorial/mutation.png)
+![](mutation.png)
 
 Click apply to accept the mutation and then done to exit the wizard.
 
-![](/Users/kr8728/enlighten/tutorial/r244t.png)
+![](r244t.png)
 
 
 From the plugin menu choose enlighten:
 
-![](/Users/kr8728/enlighten/tutorial/plugin_menu.png)
+![](plugin_menu.png)
 
 A new enlighten control panel will appear. To run simulations on the mutant model you will need to select the new 1btl_0rn_r244t object from the list and then click RUN PREP. Follow the same procedure to RUN STRUCT and DYNAM for the mutant model. 
 

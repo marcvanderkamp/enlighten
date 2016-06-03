@@ -32,7 +32,7 @@ Two windows will appear: a viewing window and a control panel.
 
 ![](PyMOL_Startup.png)
 
-We now need to load the enlighten plugin into pymol. From the Plugin drop-down menu choose Plugin and then Plugin Manager.
+We now need to load the enlighten plugin into PyMOL. From the Plugin drop-down menu choose Plugin and then Plugin Manager.
 
 ![](Plugin_manager.png)
 
@@ -202,6 +202,15 @@ A new enlighten control panel will appear. To run simulations on the mutant mode
 
 ## Part 4: Analysis
 
+The MD trajectory will automatically be loaded into the 1btl\_0rn.sp20 object when DYNAM is finished. Press the play button to move between the frames. You can adjust the number of frames per second in the Movie drop-down menu. You can use the measurement function in the Wizard menu to monitor distances during the MD simulation. 
+
+![](measurement_wizard.png)
+
+Zoom in on sulbalactam and see which residues are in the binding site. Click on two atoms to measure the distance and then press play to see how the distance changes over the simulation. In the example shown, one of the carboyxlate oxygens of sulbalactam forms a hydrogen bond with Ser210. 
+
+![](dist_ser.png)
+
+
 We can use some of the analysis tools available as part of AmberTools to get some more meaningful information from the simulations. 
 
 Here, we will calculate the root-mean square fluctuations (RMSF) of the protein, a measure of the 'flexibiltiy' of the protein, and also perform a binding energy calculation using the MM-GBSA method. 
@@ -220,14 +229,38 @@ The analyis script needs to be given the pdb name for the system and the ligand 
 `bash run_analysis.sh 1btl_0rn.pdb 0RN`
 
 These calculations will take a few minutes to run.
-The rmsf calculation will produce a file called rmsf\_all_1btl\_0rn.pdb with the RMSF data included in the b-factor column of the pdb. Open this pdb file in PyMOL. Display as cartoon and then choose colour by b-factor to view the RMSF analysis.
+The RMSF calculation will produce a file called rmsf\_all_1btl\_0rn.pdb with the RMSF data included in the b-factor column of the pdb. Open this pdb file in PyMOL. Display as cartoon and then choose colour by b-factor to view the RMSF analysis.
+![](colour_by_bfact.png)
+
+Highlight the position of the sulbalactam by showing it in stick representation. The dark blue regions are the protein that was fixed during the simulations, the more flexible regions are green and orange with a small part that is coloured red.
+
+
+![](rmsf_output.png)
+
+You can also plot the RMSF data against residue number. To do this open the file "rmsf_ca.dat" with LibreOffice or EXCEL.
+
+![](rmsf_plot.png)
+
 
 Now, you can repeat the analysis for the mutant model that you generated and ran the *Enlighten* protocols for.
 Do this by repeating the steps of the analysis above, but now in the directory for the mutant. So you may start with:
 
 `cd $WORKDIR/1btl_0rn_r244t/dynam`
 
+`cp $ENLIGHTEN/analysis/run_analysis.sh .`
+
+Run the analysis of this simulation by typing:
+
+`bash run_analysis.sh 1btl_0rn_r244t.pdb 0RN`
+
 You can now compare your results obtained for WT TEM-1 and the mutant.
+Does the mutation alter the predicted binding energy? Is it more or less favourable than the wild-type? Does the mutation alter the flexibility (RMSF) of the residues?
+
+If you have time:
+
+- Run the MD simulations for the wild-type or mutant models again (in a different directory). Do you get the same values for the binding energy?
+- Look at the residues close to the sulbalactam and choose a different residue to mutate. Does the mutation alter the predicted binding energy?
+
 
 -----------
 

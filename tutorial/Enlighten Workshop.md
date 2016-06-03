@@ -183,7 +183,7 @@ From the Wizard drop-down menu, select mutagenesis:
 
 Click on Arg244 and then  In the right hand panel choose Thr from the mutate to menu in the right-hand panel. 
 
-![](mut_sele_thr.png)
+![](Mut_sele_thr.png)
 
 The lowest energy rotamer will then be displayed. 
 

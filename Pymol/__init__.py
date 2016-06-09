@@ -6,6 +6,7 @@ import tkFileDialog
 import tkMessageBox
 import subprocess
 import webbrowser
+import time
 
 
 
@@ -314,11 +315,12 @@ class enlighten(Frame):
         p = subprocess.Popen([command], shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         while True:
             output = p.stdout.read(1)
-            if output == '' and p.wait() != None:
+            if output == '' and p.poll() != None:
                 break
             if output != '':
                 sys.stdout.write(output)
                 sys.stdout.flush()
+            self.parent.update()
 
         self.config(cursor="")
         error = p.stderr.read()
@@ -341,21 +343,47 @@ class enlighten(Frame):
         #self.rst=temp+".sp20.rst"
         print(self.ligandname.get())
         belly=self.ligandname.get()
+        temp = self.pdb[:-4]
+
+        #Remove old log files so that we can print what stage the plugin is at
+        if os.path.isfile("./" + temp + "/dynam/md_"+temp+".sp20.log"):
+            os.remove("./" + temp + "/dynam/md_"+temp+".sp20.log")
+        if os.path.isfile("./" + temp + "/dynam/min_"+temp+".sp20.log"):
+            os.remove("./" + temp + "/dynam/min_"+temp+".sp20.log")
+
+
+
+        print("The dynam will run in three seperate parts, the first is quick, the second slow and the third is quick")
+        told=time.time()
         command = self.enlightenpath.get() + "/dynam/sphere/dynam.sh " + self.pdb+ " "+ belly + " " + str(self.nstlim)
         p = subprocess.Popen([command], shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        #print("Doing the heating step (short)")
+        print("Doing the heating step (short)")
+        self.md=False
+        self.min=False
         while True:
-            output = p.stdout.read(1)
-            if output == '' and p.wait() != None:
+            if os.path.isfile("./" + temp + "/dynam/md_"+temp+".sp20.log") and self.md ==False:
+                print("Doing the dynamics step (long)")
+                self.md=True
+            if os.path.isfile("./" + temp + "/dynam/min_"+temp+".sp20.log") and self.min ==False:
+                print("Doing the minimisation step (short)")
+                self.min=True
+            tnew=time.time()
+            tdel = tnew-told
+            if tdel > 20:
+                told=tnew
+                if os.path.isfile("./" + temp + "/dynam/mdinfo"):
+                   for line in open("./" + temp + "/dynam/mdinfo"):
+                       if "Estimated time " in line:
+                            sys.stdout.write(line)
+                            sys.stdout.flush()
+            if p.poll() is not None:
                 break
-            if output != '':
-                sys.stdout.write(output)
-                sys.stdout.flush()
-
+            self.parent.update()
         error = p.stderr.read()
         sys.stdout.write(error)
         sys.stdout.flush()
        # dynamm(self.amberpath.get(),self.top,self.rst,self.nstlim,belly)
-        temp = self.pdb[:-4]
         pymol.cmd.load("./" + temp + "/dynam/md_" + temp + ".sp20.trj", temp+".sp20",3,"trj")
         pymol.cmd.load("./" + temp + "/dynam/min_" + temp + ".sp20.rst", temp+".sp20")
 

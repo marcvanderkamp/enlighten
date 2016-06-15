@@ -138,17 +138,22 @@ $AMBERHOME/bin/sander -O -i sa1b.i -p ../$sys.top -c sa1a_$sys.rst -o sa1b_$sys.
 $AMBERHOME/bin/sander -O -i min_ibelly.i -p ../$sys.top -c sa1b_$sys.rst -o min_sa_$sys.log -r min_sa_$sys.rst
 echo "Finished STRUCT protocol."
 
-
+#### Temporary fix for change in default format in AmberTools16 (binary rst instead of human/PyMOL readable)
+echo "parm ../$sys.top" > make_rst.in
+echo "trajin min_sa_$sys.rst" >> make_rst.in
+echo "trajout tmp.rst" >> make_rst.in
+$AMBERHOME/bin/cpptraj < make_rst.in > make_rst.log
+mv tmp.rst min_sa_$sys.rst
 
 #### OPTIONAL
 #### Make traj file with the results (end-points of the different stages), and measure rmsd?
-echo "parm ../$sys.top" > make_trj.in
-echo "trajin ../$sys.rst" >> make_trj.in
-for file in minh_$sys.rst min_$sys.rst sa1a_$sys.rst sa1b_$sys.rst min_sa_$sys.rst; do echo "trajin $file"; done >> make_trj.in
-#for file in min_$sys.rst sa1a_$sys.rst sa1b_$sys.rst min_sa_$sys.rst; do echo "trajin $file"; done >> make_trj.in
-# Use .trj extension (compatible with PyMOL?)
-echo "trajout sa_$sys.trj" >> make_trj.in
-$AMBERHOME/bin/cpptraj < make_trj.in > make_trj.log
+#echo "parm ../$sys.top" > make_trj.in
+#echo "trajin ../$sys.rst" >> make_trj.in
+#for file in minh_$sys.rst min_$sys.rst sa1a_$sys.rst sa1b_$sys.rst min_sa_$sys.rst; do echo "trajin $file"; done >> make_trj.in
+##for file in min_$sys.rst sa1a_$sys.rst sa1b_$sys.rst min_sa_$sys.rst; do echo "trajin $file"; done >> make_trj.in
+## Use .trj extension (compatible with PyMOL?)
+#echo "trajout sa_$sys.trj" >> make_trj.in
+#$AMBERHOME/bin/cpptraj < make_trj.in > make_trj.log
 
 # Go back to starting dir
 cd ../..

@@ -1,7 +1,7 @@
 Brief minimization of hydrogens in 10.0 sphere
 &cntrl
  imin=1, maxcyc=50, ntmin=1, ncyc=25,
- ntpr=5,
+ ntpr=5, ntxo=1,
  ntb=0, cut=10,
  ibelly=1,
  bellymask='BELLYMASK'

@@ -10,8 +10,8 @@
 ####
 # TO DO: build in option to determine which MD software to run (sander or NAMD)
 # TO DO: add in more optional variables, using flags (and case/esac)
-# TO DO: check if individual steps finish correctly, and report (& exit?) if not.
 # TO DO? check for and add $AMBERHOME/bin to $PATH (already checked in prep.sh)
+# TO DO? Add in comments of what is being run
 
 ### Rudimentary usage (to be replaced by usage with input flags etc.)
 Usage="Usage: dynam.sh <pdb file> <ligand name> [<number of ps production>]"
@@ -28,7 +28,7 @@ pdb=$1         # pdb WITH hydrogens on ligand!
 pdb_name=`echo $pdb | sed -e 's,\.pdb,,' -e 's,\.PDB,,'`
 lig_name=$2    #  
 if [ $# -ge 3 ]; then
-   ps=$3       # Not tested yet
+   ps=$3       # User defined # ps MD 
 else
    ps=100      # Default value of 100ps MD 
 fi
@@ -114,6 +114,20 @@ if [ ! -d ../include ]; then
 fi
 if [ ! -d dynam ]; then
   mkdir dynam
+  dynamdir=dynam
+else 
+  numdir=`ls -d dynam* | wc -l`
+  echo "Found $numdir dynam directories."
+  newdir=`expr $numdir + 1`
+  if [ ! -d dynam$newdir ]; then
+    dynamdir=dynam$newdir
+    echo "Making new dynam directory: $dynamdir" 
+    mkdir dynam$newdir
+  # This could be replaced with making a dynam dir one integer higher than the current highest.
+  else 
+    echo "dynam and $dynamdir already exist. Remove or rename. Exiting.."
+    exit
+  fi  
 fi
 for name in heat md min; do
    rsync -a $ENLIGHTEN/dynam/sphere/$name.i ../include/
@@ -121,15 +135,15 @@ for name in heat md min; do
       echo "Can't find $name.i in include/. Cannot continue. Exiting..."
       exit
    fi
-   sed -e "s/BELLYMASK/$bellymask/" ../include/$name.i > dynam/$name.i
+   sed -e "s/BELLYMASK/$bellymask/" ../include/$name.i > $dynamdir/$name.i
 done
 if [ "$ps" -ne 100 ]; then
-  sed -i -e "s/nstlim=50000/nstlim=$steps/g" dynam/md.i
+  sed -i -e "s/nstlim=50000/nstlim=$steps/g" $dynamdir/md.i
 fi
 
 ## Run default MD protocol in sander (with ibelly)
-echo "Starting DYNAM protocol in $pdb_name/dynam/ using $md_code."
-cd dynam
+echo "Starting DYNAM protocol in $pdb_name/$dynamdir/ using $md_code."
+cd $dynamdir
 ## Check for presence of sander, exit if not
 if [ -z $AMBERHOME ]; then
    echo "Please set \$AMBERHOME and try again. Exiting..."
@@ -144,7 +158,7 @@ $AMBERHOME/bin/sander -O -i heat.i -p ../$sys.top -c ../struct/min_sa_$sys.rst -
 echo "Finished heating, now starting $ps ps dynamics..."
 # Run short md production (100ps default)
 $AMBERHOME/bin/sander -O -i md.i -p ../$sys.top -c heat_$sys.rst -o md_$sys.log -r md_$sys.rst -x md_$sys.trj
-echo "Finished dynamics, now doing minimisation..."
+echo "Finished dynamics, now doing minimisation"
 # End with another brief minimization (100 steps)
 $AMBERHOME/bin/sander -O -i min.i -p ../$sys.top -c md_$sys.rst -o min_$sys.log -r min_$sys.rst
 echo "Finished DYNAM protocol."

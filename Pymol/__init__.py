@@ -340,7 +340,7 @@ class enlighten(Frame):
         # heating command
         print(self.pdb)
         #self.top=temp+".sp20.top"
-        #self.rst=temp+".sp20.rst"
+        #self.rst=temp+".sp20.rst."
         print(self.ligandname.get())
         belly=self.ligandname.get()
         temp = self.pdb[:-4]
@@ -353,20 +353,20 @@ class enlighten(Frame):
 
 
 
-        print("The dynam will run in three seperate parts, the first is quick, the second slow and the third is quick")
+        print("The DYNAM protocol will run in three seperate parts: 1. Heating (quick); 2. Dynamics (slow, dependent on #ps of simulation); 3. Minimisation (quick).")
         told=time.time()
         command = self.enlightenpath.get() + "/dynam/sphere/dynam.sh " + self.pdb+ " "+ belly + " " + str(self.nstlim)
         p = subprocess.Popen([command], shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         #print("Doing the heating step (short)")
-        print("Doing the heating step (short)")
+        print("Starting heating (quick)...")
         self.md=False
         self.min=False
         while True:
             if os.path.isfile("./" + temp + "/dynam/md_"+temp+".sp20.log") and self.md ==False:
-                print("Doing the dynamics step (long)")
+                print("Heating finished. Starting dynamics (long)...")
                 self.md=True
             if os.path.isfile("./" + temp + "/dynam/min_"+temp+".sp20.log") and self.min ==False:
-                print("Doing the minimisation step (short)")
+                print("Dynamics finished. Performing final minimisation (quick).")
                 self.min=True
             tnew=time.time()
             tdel = tnew-told

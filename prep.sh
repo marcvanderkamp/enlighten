@@ -203,6 +203,11 @@ if [ $skip_propka31 -ne 1 ]; then
 fi
 # Run sed-scripts to rename HIS and residues to (de)protonate, AND remove hydrogens on HETATMs added by reduce
 sed -f rename.sed ${pdb_name}_2.pdb | awk '{if (substr($0,0,6)!="HETATM" || substr($0,78,7)!="H   new") print}' > ${pdb_name}_3.pdb
+# NB: also need to remove hydrogens added by reduce on deprotonated residues - else top-file creation will fail.    
+if [ -n "$deprot_res_lst" ]; then
+  awk '{if ((substr($0,18,3)!="LYN" && substr($0,18,3)!="CYM") || substr($0,78,7)!="H   new") print}' ${pdb_name}_3.pdb > tmp.pdb
+  mv tmp.pdb ${pdb_name}_3.pdb
+fi
 cd ..
 
 

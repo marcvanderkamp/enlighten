@@ -223,31 +223,39 @@ for val in "${nonprot_res[@]}" ; do
 #  2a. check if these residues are in the user-supplied list $alt_res
 #     uses a 'hacky' check ( if [[ "${alt_res[@]}" =~ "${val} "  etc.) instead of the contains() function
    if [[ "${alt_res[@]}" =~ "${val} " || "${alt_res[${#alt_res[@]}-1]}" == "${val}" ]]; then
+      echo "Residue $val was given in user-supplied list."
+   else 
+      echo "Residue $val was NOT given in user-supplied list."
+   fi
 #  2b. check if .off (OR .prepc) and .frcmod exist, and put them in list to load for tleap
-      if [ -e $val.off -a -e $val.frcmod ]; then
-         echo "Using user-supplied $val.off & $val.frcmod."
-         res_loadoff="$res_loadoff $val.off"
-         res_loadfrcmod="$res_loadfrcmod $val.frcmod"
-      elif [ -e lig/$val.off -a -e lig/$val.frcmod ]; then
-         echo "Using user-supplied lig/$val.off & lig/$val.frcmod."
-         res_loadoff="$res_loadoff lig/$val.off"
-         res_loadfrcmod="$res_loadfrcmod lig/$val.frcmod"
-      elif [ -e $val.prepc -a -e $val.frcmod ]; then
-         echo "Using user-supplied $val.prepc & $val.frcmod."
-         res_loadprepc="$res_loadprepc $val.prepc"
-         res_loadfrcmod="$res_loadfrcmod $val.frcmod"
-      elif [ -e lig/$val.prepc -a -e lig/$val.frcmod ]; then
-         echo "Using user-supplied lig/$val.prepc & lig/$val.frcmod."
-         res_loadprepc="$res_loadprepc lig/$val.prepc"
-         res_loadfrcmod="$res_loadfrcmod lig/$val.frcmod"
-      fi
+   if [ -e $val.off -a -e $val.frcmod ]; then
+      echo "Using user-supplied $val.off & $val.frcmod."
+      res_loadoff="$res_loadoff $val.off"
+      res_loadfrcmod="$res_loadfrcmod $val.frcmod"
+   elif [ -e lig/$val.off -a -e lig/$val.frcmod ]; then
+      echo "Using user-supplied lig/$val.off & lig/$val.frcmod."
+      res_loadoff="$res_loadoff lig/$val.off"
+      res_loadfrcmod="$res_loadfrcmod lig/$val.frcmod"
+   elif [ -e $val.prepc -a -e $val.frcmod ]; then
+      echo "Using user-supplied $val.prepc & $val.frcmod."
+      res_loadprepc="$res_loadprepc $val.prepc"
+      res_loadfrcmod="$res_loadfrcmod $val.frcmod"
+   elif [ -e lig/$val.prepc -a -e lig/$val.frcmod ]; then
+      echo "Using user-supplied lig/$val.prepc & lig/$val.frcmod."
+      res_loadprepc="$res_loadprepc lig/$val.prepc"
+      res_loadfrcmod="$res_loadfrcmod lig/$val.frcmod"
 #  TO DO Check if these residues are in include/ .off files
 #        Best also to support *searching through* .off AND .lib files
    else
       echo "Cannot find $val.off/.prepc and/or $val.frcmod for non-standard residue $val. Exiting."
       exit
    fi 
+# 3. Reduce adds hydrogens to alternative residues if they are labelled "ATOM" (which is the PyMOL default)
+# This will cause problems with (user-supplied) parameter files. So, delete added hydrogens from alternative residues here.
+   awk -v res=$val '{if (substr($0,18,3)!=res || substr($0,78,7)!="H   new") print}' ${pdb_name}/${pdb_name}_3.pdb > ${pdb_name}/tmp.pdb
+   mv ${pdb_name}/tmp.pdb ${pdb_name}/${pdb_name}_3.pdb 
 done   
+
 
 
 #### Solvation of system in TIP3P solvent sphere

@@ -328,7 +328,7 @@ class enlighten(Frame):
         sys.stdout.flush()
 
         temp = self.pdb[:-4]
-        pymol.cmd.load("./" + temp +"/"+ temp + ".sp20.rst", temp + ".sp20")
+        pymol.cmd.load("./" + temp +"/struct/min_sa_"+ temp + ".sp20.rst", temp + ".sp20")
         self.dynamButton.config(state="normal")
         print "Job Finished"
 

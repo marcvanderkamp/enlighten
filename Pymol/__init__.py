@@ -76,11 +76,13 @@ class enlighten(Frame):
         self.workingpath.grid(row=3, column=1, columnspan=4, sticky=W + E)
         outputButton = Button(frame1, text="Browser", command=self.onOpenO)
         outputButton.grid(row=3, column=5, sticky="e")
+
         lbl5 = Label(frame1, text="Ligand Name", width=12)
         lbl5.grid(row=4, column=0)
         self.ligandname = Entry(frame1)
         self.ligandname.insert(END, 'Ligand name') # Fixme
         self.ligandname.grid(row=4, column=1)
+
         lbl6 = Label(frame1, text="Ligand Charge", width=12)
         lbl6.grid(row=4, column=2)
         self.ligandcharge = Entry(frame1)
@@ -90,10 +92,11 @@ class enlighten(Frame):
         # Time steps for use in dynam
         lbl7 = Label(frame1, text="Time (ps)", width=12)
         lbl7.grid(row=5, column=2)
-        self.entry7 = Entry(frame1)
-        self.entry7.insert(END, '100')
-        self.entry7.grid(row=5, column=3)
-        self.nstlim = int(self.entry7.get())  # Convert to time steps variable
+        self.ntslim = Entry(frame1)
+        self.ntslim.insert(END, '100')
+        self.ntslim.grid(row=5, column=3)
+        print "number of dynamics steps passed to routine? "+self.ntslim.get()
+        self.nstlim = int(self.ntslim.get())  # Convert to time steps variable
 
 
         # This is where frame two starts
@@ -355,7 +358,7 @@ class enlighten(Frame):
 
         print("The dynam will run in three seperate parts, the first is quick, the second slow and the third is quick")
         told=time.time()
-        command = self.enlightenpath.get() + "/dynam/sphere/dynam.sh " + self.pdb+ " "+ belly + " " + str(self.nstlim)
+        command = self.enlightenpath.get()+"/dynam/sphere/dynam.sh "+self.pdb+" "+belly+" "+str(int(self.ntslim.get()))
         p = subprocess.Popen([command], shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         #print("Doing the heating step (short)")
         print("Doing the heating step (short)")

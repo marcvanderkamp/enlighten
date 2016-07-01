@@ -1,4 +1,4 @@
-100ps MD with only ibelly restraint on atoms outside sphere
+MD with only ibelly restraint on atoms outside sphere
 &cntrl
  imin=0, irest=1, ntx=5, 
  nstlim=50000, dt=0.002,

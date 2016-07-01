@@ -48,8 +48,8 @@ fi
 # Abandonned the below awk command, as it caused problems for users.
 #lig_atno=`awk -v lig=$lig_name '{if (substr($0,18,3)==lig && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print}' $pdb | grep -c $lig_name`
 # Less elegant alternative, based on grep & expr
-lig_atom1=`grep -c "^ATOM.*$lig_name" 1btl_0rn.pdb`
-lig_atom2=`grep -c "^HETATM.*$lig_name" 1btl_0rn.pdb`
+lig_atom1=`grep -c "^ATOM.*$lig_name" $pdb`
+lig_atom2=`grep -c "^HETATM.*$lig_name" $pdb`
 lig_atno=`expr ${lig_atom1} + ${lig_atom2}`
 if [ $lig_atno -lt 2 ]; then
   echo " Ligand $lig_name contains 1 or less atoms. Please check your command."

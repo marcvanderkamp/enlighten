@@ -39,13 +39,27 @@ ph_offset=0.7  # The default offset - will be an option that can be set by user
 prot_pka=`echo "$ph + $ph_offset" | bc`    # predicted pKa above which ASP & GLU will be protonated 
 deprot_pka=`echo "$ph - $ph_offset" | bc`  # predicted pKa below which CYS,LYS will be deprotonated
 
+#### Function to pick awk version (awk on MacOS -nawk?- or gawk on Linux is ok, mawk is not)
+## Check for mawk currently doesn't work properly - needs fixing.
+## Ideally needs further checking (e.g. for nawk) and testing
+myawk() {
+    if hash gawk 2>/dev/null; then
+        gawk "$@"
+#    elsif ls -l `which awk` | grep -c mawk 2>/dev/null; then 
+#        echo "Your default awk is mawk and gawk not in your \$PATH. Please make sure gawk is in your \$PATH. Cannot continue."
+#        exit
+    else
+        awk "$@"
+    fi
+}
+
 #### Check for presence of input pdb and for lig_name residue(s) in pdb
 if [ ! -f $pdb ]; then
    echo "$pdb is not present. Please check and try again. Exiting..."
    exit
 fi
 # check if there are more than 1 atoms in the ligand, exit if not
-lig_atno=`awk -v lig=$lig_name '{if (substr($0,18,3)==lig && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print}' $pdb | grep -c $lig_name`
+lig_atno=`myawk -v lig=$lig_name '{if (substr($0,18,3)==lig && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print}' $pdb | grep -c $lig_name`
 # Less elegant alternative, based on grep & expr
 #lig_atom1=`grep -c "^ATOM.*$lig_name" $pdb`
 #lig_atom2=`grep -c "^HETATM.*$lig_name" $pdb`
@@ -57,11 +71,11 @@ if [ $lig_atno -lt 2 ]; then
   exit
 fi
 # Count number of ligands by using residue number
-lig_num=`awk -v lig=$lig_name '{if (substr($0,18,3)==lig && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print substr($0,23,4)}' $pdb | uniq | wc -l`
+lig_num=`myawk -v lig=$lig_name '{if (substr($0,18,3)==lig && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print substr($0,23,4)}' $pdb | uniq | wc -l`
 # Define lig_resn as the first ligand residue occuring (needed in case there are multiple copies of ligand in pdb)
-lig_resn=`awk -v lig=$lig_name '{if (substr($0,18,3)==lig && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print substr($0,23,4)}' $pdb | head -n 1`
+lig_resn=`myawk -v lig=$lig_name '{if (substr($0,18,3)==lig && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print substr($0,23,4)}' $pdb | head -n 1`
 # Update lig_atno
-lig_atno=`awk -v lig=$lig_name -v lig_resid="$lig_resn" '{if (substr($0,18,3)==lig && substr($0,23,4)==lig_resid && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print}' $pdb | grep -c $lig_name`
+lig_atno=`myawk -v lig=$lig_name -v lig_resid="$lig_resn" '{if (substr($0,18,3)==lig && substr($0,23,4)==lig_resid && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print}' $pdb | grep -c $lig_name`
 #lig_resn=`$lig_resn | xargs`
 # Report
 if [ $lig_num -gt 1 ]; then
@@ -117,7 +131,7 @@ elif [ -e include/$lig_name.prepc ]; then
 else
    echo "Preparing parameters for $lig_name: lig/$lig_name.prepc"
    # print only the ATOM/HETATM fields for the ligand with lig_resid
-   awk -v lig=$lig_name -v lig_resid="$lig_resn" '{if (substr($0,18,3)==lig && substr($0,23,4)==lig_resid && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print}' $pdb > lig/$lig_name.pdb
+   myawk -v lig=$lig_name -v lig_resid="$lig_resn" '{if (substr($0,18,3)==lig && substr($0,23,4)==lig_resid && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print}' $pdb > lig/$lig_name.pdb
    cd lig
    antechamber -i  $lig_name.pdb -fi pdb -o $lig_name.prepc -fo prepc -rn $lig_name -c bcc -nc $lig_charge
 # Check here if antechamber/sqm have run successfully
@@ -162,54 +176,54 @@ else
 fi
 cd $pdb_name
 # Change ligand chain ID (to L)
-awk -v lig=$lig_name '{if (substr($0,18,3)==lig || $4==lig) {printf("%sL%s\n",substr($0,0,21),substr($0,23,70))} else print}' ../$pdb > ${pdb_name}_0.pdb
+myawk -v lig=$lig_name '{if (substr($0,18,3)==lig || $4==lig) {printf("%sL%s\n",substr($0,0,21),substr($0,23,70))} else print}' ../$pdb > ${pdb_name}_0.pdb
 # Run pdb4amber and reduce
 pdb4amber -i ${pdb_name}_0.pdb -o ${pdb_name}_1.pdb  --nohyd --dry &> pdb4amber.log
 reduce -build -nuclear ${pdb_name}_1.pdb &> ${pdb_name}_2.pdb
 # HIS tautomers selected, but not renamed in ${pdb_name}_2.pdb. 
 #  Detect which protons are present and rename to HIE/HID/HIP based on that.
 #  (Generate sed-script to run later to create ${pdb_name}_3.pdb)
-awk '{if (substr($0,0,9)=="USER  MOD" && substr($0,26,3)=="HIS") {if (substr($0,40,6)=="no HE2") {res="HID"} else if (substr($0,40,6)=="no HD1") {res="HIE"}  else if (substr($0,40,6)=="bothHN") {res="HIP"}; printf("s,HIS %s,%s %s,g \n",substr($0,20,5),res,substr($0,20,5))}}' ${pdb_name}_2.pdb > rename.sed
+myawk '{if (substr($0,0,9)=="USER  MOD" && substr($0,26,3)=="HIS") {if (substr($0,40,6)=="no HE2") {res="HID"} else if (substr($0,40,6)=="no HD1") {res="HIE"}  else if (substr($0,40,6)=="bothHN") {res="HIP"}; printf("s,HIS %s,%s %s,g \n",substr($0,20,5),res,substr($0,20,5))}}' ${pdb_name}_2.pdb > rename.sed
 # Reduce doesn't check pKa's and leaves all Asp/Glu (Lys etc.) in their standard states. Check Asp/Glu with propka31 (if available)
 # Run propka31 (if available in $PATH)
 if [ $skip_propka31 -ne 1 ]; then
   propka31 ${pdb_name}_2.pdb &> propka31.log
 # Check for ASP/GLU pKa's above prot_pka and if so, print out and put in prot_res_lst
-  prot_res_lst=`awk -v pka=$prot_pka '{if (NF==5 && (substr($0,0,6)=="   ASP" || substr($0,0,6)=="   GLU") && $4>=pka) {print $2}}' ${pdb_name}_2.pka`
+  prot_res_lst=`myawk -v pka=$prot_pka '{if (NF==5 && (substr($0,0,6)=="   ASP" || substr($0,0,6)=="   GLU") && $4>=pka) {print $2}}' ${pdb_name}_2.pka`
   if [ -n "$prot_res_lst" ]; then
     echo "The following ASP/GLU residues have predicted pKa's above $prot_pka and will be protonated (on OD2/OE2):"
     echo "   (predicted pKa is indicated)"
 # Print the original residue name+number of ASP/GLU's being protonated (with predicted pKa?):
     for res in $prot_res_lst; do
-      awk -v resid=$res '{if ($4==resid) printf("%s    ",substr($0,1,9))}' ${pdb_name}_1_renum.txt
+      myawk -v resid=$res '{if ($4==resid) printf("%s    ",substr($0,1,9))}' ${pdb_name}_1_renum.txt
   # need to compare res with residue number in the .pka file. See also next comments. 
   #  (Not sure what propka does with >999 resid - still in columns 7-10 ?)
-      awk -v resid=$res '{if (substr($0,1,3)=="   " && ($2==resid || substr($0,7,4)==resid)) print substr($0,17,5)}' ${pdb_name}_2.pka
+      myawk -v resid=$res '{if (substr($0,1,3)=="   " && ($2==resid || substr($0,7,4)==resid)) print substr($0,17,5)}' ${pdb_name}_2.pka
   # need to compare res with the residue number in the pdb file (columns 23-26), regardless of how many characters it is (1-4).
   # Currently, rely on resid being $6 (true if there is a chain ID and resid is 1-3 chars) OR $5 (true if there's no chain ID and resid is 1-3 chars) OR substr($0,23,4) (true if resid is 4 chars)
   #  This will cause problems when res is 1-9 and there is a numerical chain ID (a very unusual situation)
   #  (This will be easier to do properly when ${pdb_name}_2.pdb is parsed in a python-script)
-      awk -v resid=$res '{if ($3=="CA" && ($substr($0,23,4)==resid || $6==resid || $5==resid)) {if (substr($0,18,3)=="ASP") {resn="ASH"}; if (substr($0,18,3)=="GLU") {resn="GLH"} ; printf("s,%s %s,%s %s,g \n",substr($0,18,3),substr($0,22,6),resn,substr($0,22,6))}}'  ${pdb_name}_2.pdb >> rename.sed
+      myawk -v resid=$res '{if ($3=="CA" && ($substr($0,23,4)==resid || $6==resid || $5==resid)) {if (substr($0,18,3)=="ASP") {resn="ASH"}; if (substr($0,18,3)=="GLU") {resn="GLH"} ; printf("s,%s %s,%s %s,g \n",substr($0,18,3),substr($0,22,6),resn,substr($0,22,6))}}'  ${pdb_name}_2.pdb >> rename.sed
     done
   fi
 # Check for CYS/LYS pKa's below deprot_pka and if so, print out and put in deprot_res_lst
 #  (Essentially the same as above for protonation of ASP/GLU)
-  deprot_res_lst=`awk -v pka=$deprot_pka '{if (NF==5 && (substr($0,0,6)=="   CYS" || substr($0,0,6)=="   LYS") && $4<=pka) {print $2}}' ${pdb_name}_2.pka`
+  deprot_res_lst=`myawk -v pka=$deprot_pka '{if (NF==5 && (substr($0,0,6)=="   CYS" || substr($0,0,6)=="   LYS") && $4<=pka) {print $2}}' ${pdb_name}_2.pka`
   if [ -n "$deprot_res_lst" ]; then
     echo "The following CYS/LYS residues have predicted pKa's below $deprot_pka and will be deprotonated:"
     echo "   (predicted pKa is indicated)"
     for res in $deprot_res_lst; do
-      awk -v resid=$res '{if ($4==resid) printf("%s    ",substr($0,1,9))}' ${pdb_name}_1_renum.txt
-      awk -v resid=$res '{if (substr($0,1,3)=="   " && ($2==resid || substr($0,7,4)==resid)) print substr($0,17,5)}' ${pdb_name}_2.pka
-      awk -v resid=$res '{if ($3=="CA" && ($substr($0,23,4)==resid || $6==resid || $5==resid)) {if (substr($0,18,3)=="CYS") {resn="CYM"}; if (substr($0,18,3)=="LYS") {resn="LYN"} ; printf("s,%s %s,%s %s,g \n",substr($0,18,3),substr($0,22,6),resn,substr($0,22,6))}}'  ${pdb_name}_2.pdb >> rename.sed
+      myawk -v resid=$res '{if ($4==resid) printf("%s    ",substr($0,1,9))}' ${pdb_name}_1_renum.txt
+      myawk -v resid=$res '{if (substr($0,1,3)=="   " && ($2==resid || substr($0,7,4)==resid)) print substr($0,17,5)}' ${pdb_name}_2.pka
+      myawk -v resid=$res '{if ($3=="CA" && ($substr($0,23,4)==resid || $6==resid || $5==resid)) {if (substr($0,18,3)=="CYS") {resn="CYM"}; if (substr($0,18,3)=="LYS") {resn="LYN"} ; printf("s,%s %s,%s %s,g \n",substr($0,18,3),substr($0,22,6),resn,substr($0,22,6))}}'  ${pdb_name}_2.pdb >> rename.sed
     done
   fi
 fi
 # Run sed-scripts to rename HIS and residues to (de)protonate, AND remove hydrogens on HETATMs added by reduce
-sed -f rename.sed ${pdb_name}_2.pdb | awk '{if (substr($0,0,6)!="HETATM" || substr($0,78,7)!="H   new") print}' > ${pdb_name}_3.pdb
+sed -f rename.sed ${pdb_name}_2.pdb | myawk '{if (substr($0,0,6)!="HETATM" || substr($0,78,7)!="H   new") print}' > ${pdb_name}_3.pdb
 # NB: also need to remove hydrogens added by reduce on deprotonated residues - else top-file creation will fail.    
 if [ -n "$deprot_res_lst" ]; then
-  awk '{if ((substr($0,18,3)!="LYN" && substr($0,18,3)!="CYM") || substr($0,78,7)!="H   new") print}' ${pdb_name}_3.pdb > tmp.pdb
+  myawk '{if ((substr($0,18,3)!="LYN" && substr($0,18,3)!="CYM") || substr($0,78,7)!="H   new") print}' ${pdb_name}_3.pdb > tmp.pdb
   mv tmp.pdb ${pdb_name}_3.pdb
 fi
 cd ..
@@ -224,7 +238,7 @@ cd ..
 res_loadoff=""
 res_loadfrcmod=""
 #  1a. check for residue names in ${pdb_name}_1_nonprot.pdb different from $lig_name, put them in list and declare an array
-nonprot_res_lst=`awk -v lig=$lig_name '{if (substr($0,18,3)!=lig) print substr($0,18,3)}' ${pdb_name}/${pdb_name}_1_nonprot.pdb | uniq`
+nonprot_res_lst=`myawk -v lig=$lig_name '{if (substr($0,18,3)!=lig) print substr($0,18,3)}' ${pdb_name}/${pdb_name}_1_nonprot.pdb | uniq`
 declare -a nonprot_res=($nonprot_res_lst)
 #  1b. start loop over the residues in the array
 for val in "${nonprot_res[@]}" ; do
@@ -261,7 +275,7 @@ for val in "${nonprot_res[@]}" ; do
    fi 
 # 3. Reduce adds hydrogens to alternative residues if they are labelled "ATOM" (which is the PyMOL default)
 # This will cause problems with (user-supplied) parameter files. So, delete added hydrogens from alternative residues here.
-   awk -v res=$val '{if (substr($0,18,3)!=res || substr($0,78,7)!="H   new") print}' ${pdb_name}/${pdb_name}_3.pdb > ${pdb_name}/tmp.pdb
+   myawk -v res=$val '{if (substr($0,18,3)!=res || substr($0,78,7)!="H   new") print}' ${pdb_name}/${pdb_name}_3.pdb > ${pdb_name}/tmp.pdb
    mv ${pdb_name}/tmp.pdb ${pdb_name}/${pdb_name}_3.pdb 
 done   
 
@@ -275,8 +289,8 @@ done
 # Curently just the first atom of the ligand in the pdb (but needs changing to let user select!?)
 #  Simple way: extract first ligand resid & atname from ${pdb_name}_1.pdb 
 #   resid (echo cuts preceeding spaces from variable; necessary wheno printing all 4 (resid) or 5(atname) fields; be aware of this for python-script!)
-cen_resid=`grep $lig_name ${pdb_name}/${pdb_name}_1.pdb | head -n 1 | awk '{print substr($0,23,4)}'`
-cen_atname=`grep $lig_name ${pdb_name}/${pdb_name}_1.pdb | head -n 1 | awk '{print substr($0,13,5)}'`
+cen_resid=`grep $lig_name ${pdb_name}/${pdb_name}_1.pdb | head -n 1 | myawk '{print substr($0,23,4)}'`
+cen_atname=`grep $lig_name ${pdb_name}/${pdb_name}_1.pdb | head -n 1 | myawk '{print substr($0,13,5)}'`
 cen_resid=`echo $cen_resid | xargs`
 cen_atname=`echo $cen_atname | xargs`
 # formatted for tleap:

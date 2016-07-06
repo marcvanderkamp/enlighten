@@ -80,8 +80,8 @@ if [ ! -e ${pdb_name}_1.pdb ]; then
   echo "Exiting..."
   exit
 fi
-cen_resid=`grep $lig_name ${pdb_name}_1.pdb | head -n 1 | gawk '{print substr($0,23,4)}'`
-cen_atname=`grep $lig_name ${pdb_name}_1.pdb | head -n 1 | gawk '{print substr($0,13,5)}'`
+cen_resid=`grep $lig_name ${pdb_name}_1.pdb | head -n 1 | awk '{print substr($0,23,4)}'`
+cen_atname=`grep $lig_name ${pdb_name}_1.pdb | head -n 1 | awk '{print substr($0,13,5)}'`
 cen_resid=`echo $cen_resid | xargs`
 cen_atname=`echo $cen_atname | xargs`
 # bellymask: all residues with any atom within 10 Ang from cen_atname in cen_resid

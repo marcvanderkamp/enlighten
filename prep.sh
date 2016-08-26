@@ -312,6 +312,9 @@ loadamberparams ../$lig_frcmod
 for off in $res_loadoff ; do
    echo "loadoff ../$off" >>  tleap_sp$rad_short.in
 done
+for prepc in $res_loadprepc ; do
+   echo "loadamberprep ../$prepc" >>  tleap_sp$rad_short.in
+done
 for frc in $res_loadfrcmod ; do 
    echo "loadamberparams ../$frc" >>  tleap_sp$rad_short.in
 done

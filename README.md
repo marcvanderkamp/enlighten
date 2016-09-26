@@ -73,6 +73,15 @@ In tcsh/csh:
 setenv ENLIGHTEN /my/path/to/enlighten/
 
 
+5) Prior to running Enlighten through the command line, make sure your environment is set up for the external programs
+
+For AmberTools, do the following:
+source /\<*full path to amber directory, e.g. /users/me/amber14/*\>/amber.sh
+
+For PropKa, ensure that propka31 is in your $PATH (i.e. it is recognised as command from the command-line), e.g. in bash:
+export PATH=$PATH:/*my/path/to/propka*/propka31
+
+
 ## Available protocols
 ### PREP: prep.sh
 prep.sh takes enzyme-ligand pdb file and generates ligand parameters, adds hydrogens, adds solvent (sphere), generates Amber topology/coordinate files.

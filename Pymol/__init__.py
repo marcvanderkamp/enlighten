@@ -43,71 +43,74 @@ class enlighten(Frame):
 
         # Now move onto frame one
         frame2 = Frame(self.parent)
-        frame2.grid(row=1, column=0, sticky=W, columnspan=6)
+        frame2.grid(row=1, column=0, sticky=W, columnspan=7)
+        #lF8 = LabelFrame(frame2, text="File settings", fg="blue", padx=30, pady=30, width=650, height=120)
+        #lF8.grid(row=0, columnspan=7)
+
         lbl1 = Label(frame2, text="PDB file", width=12)
-        lbl1.grid(row=0, column=0)
+        lbl1.grid(row=1, column=0)
         self.entry1 = Entry(frame2)
-        self.entry1.grid(row=0, column=1, sticky=W+E, columnspan=6)
+        self.entry1.grid(row=1, column=1, sticky=W+E, columnspan=6)
         self.browserButton = Button(frame2, text="Browser", command=self.onOpenF)
-        self.browserButton.grid(row=0, column=6, sticky="e")
+        self.browserButton.grid(row=1, column=6, sticky="e")
 
         lbl2 = Label(frame2, text="Enlighten folder", width=12)
-        lbl2.grid(row=1, column=0)
+        lbl2.grid(row=2, column=0)
         self.enlightenpath = Entry(frame2)
         #self.enlightenpath.insert(END, '/Users/simonbennie/enlighten') #fixme
         self.enlightenpath.insert(0, os.environ.get('ENLIGHTEN', 'Please specify ENLIGHTEN home directory'))
-        self.enlightenpath.grid(row=1, column=1, columnspan=6, sticky=W+E)
+        self.enlightenpath.grid(row=2, column=1, columnspan=6, sticky=W+E)
         enlightenButton = Button(frame2, text="Browser", command=self.onOpen)
-        enlightenButton.grid(row=1, column=6, sticky=E)
+        enlightenButton.grid(row=2, column=6, sticky=E)
 
         lbl3 = Label(frame2, text="AMBER folder", width=12)
-        lbl3.grid(row=2, column=0)
+        lbl3.grid(row=3, column=0)
         self.amberpath = Entry(frame2)
-        self.amberpath.grid(row=2, column=1, columnspan=6, sticky=W+E)
+        self.amberpath.grid(row=3, column=1, columnspan=6, sticky=W+E)
         amberButton = Button(frame2, text="Browser", command=self.onOpenA)
-        amberButton.grid(row=2, column=6, sticky="e")
+        amberButton.grid(row=3, column=6, sticky="e")
         # This will auto find the amber installation from the environment variables
         self.amberpath.insert(0, os.environ.get('AMBERHOME', 'Please specify AMBER home directory'))
 
         lbl4 = Label(frame2, text="Output folder", width=12)
-        lbl4.grid(row=3, column=0)
+        lbl4.grid(row=4, column=0)
         self.workingpath = Entry(frame2)
         self.workingdir=os.getcwd() #pymol.externing.pwd()
         self.workingpath.insert(END,os.getcwd())  # Fixme
-        self.workingpath.grid(row=3, column=1, columnspan=6, sticky=W+E)
+        self.workingpath.grid(row=4, column=1, columnspan=6, sticky=W+E)
         outputButton = Button(frame2, text="Browser", command=self.onOpenO)
-        outputButton.grid(row=3, column=6, sticky="e")
+        outputButton.grid(row=4, column=6, sticky="e")
 
         lbl5 = Label(frame2, text="Ligand Name", width=12)
-        lbl5.grid(row=4, column=0)
+        lbl5.grid(row=5, column=0)
         self.ligandname = Entry(frame2, width=10)
         self.ligandname.insert(END, 'Ligand name') # Fixme
-        self.ligandname.grid(row=4, column=1)
+        self.ligandname.grid(row=5, column=1)
 
         lbl6 = Label(frame2, text="Ligand Charge", width=12)
-        lbl6.grid(row=4, column=2)
+        lbl6.grid(row=5, column=2)
         self.ligandcharge = Entry(frame2,width=5)
         self.ligandcharge.insert(END, '-1')
-        self.ligandcharge.grid(row=4, column=3)
+        self.ligandcharge.grid(row=5, column=3)
 
         # Time steps for use in dynam
         lbl7 = Label(frame2, text="Time (ps)", width=12)
-        lbl7.grid(row=4, column=4)
+        lbl7.grid(row=5, column=4)
         self.ntslim = Entry(frame2,width=5)
         self.ntslim.insert(END, '100')
-        self.ntslim.grid(row=4, column=5)
+        self.ntslim.grid(row=5, column=5)
         print "number of dynamics steps passed to routine? "+self.ntslim.get()
         self.nstlim = int(self.ntslim.get())  # Convert to time steps variable
 
 
         # This is where frame two starts
         frame3 = Frame(self.parent)
-        frame3.grid(row=2, column=0, sticky="nsew", columnspan=6, rowspan=5)
+        frame3.grid(row=2, column=0, sticky="nsew", columnspan=3, rowspan=5, pady=10)
         # This next section constructs a box plus the scroll bar and reaction to user input.
         self.vsb = Scrollbar(frame3, orient="vertical", command=self.OnVsb)
         self.vsb.grid(row=0, column=2, sticky="wns", rowspan=5)
         lbl7 = Label(frame3, text="List of objects", width=12)
-        lbl7.grid(row=0, column=0, sticky=N)
+        lbl7.grid(row=0, column=0, sticky=W)
         self.lb1 = Listbox(frame3, yscrollcommand=self.vsb.set)
         self.lb1.grid(row=0, column=1, rowspan=5)
         self.lb1.bind("<MouseWheel>", self.OnMouseWheel)
@@ -121,18 +124,20 @@ class enlighten(Frame):
 
 
         # Advanced options frame
-        #frame4 = Frame(self.parent)
-        #frame4.grid(row=2, column=1, sticky="W")
-        lbl8 = Label(frame3, fg="red", text="Advanced options", width=15)
-        lbl8.grid(row=1, column=4, sticky=N)
+        frame4 = Frame(self.parent)
+        frame4.grid(row=2, column=1, sticky="W")
+        lbl8 = LabelFrame(frame4, text="Advanced options", fg="red", padx=5, pady=5, width=220, height=165)
+        lbl8.grid(row=0, sticky='NS', columnspan=3,rowspan=5)
+        #self.sep = Separator(frame3)
+        #self.sep.grid(row=0, column=4, sticky="ew")
 
         # Non standard residue name box
 
-        lbl9 = Label(frame3, fg="red", text="Residue", width=11)
-        lbl9.grid(row=2, column=3, sticky=N)
-        self.residue = Entry(frame3,width=15)
+        lbl9 = Label(frame4, fg="red", text="Residue", width=10)
+        lbl9.grid(row=1, column=0, sticky=N)
+        self.residue = Entry(frame4, width=14)
         self.residue.insert(END, '')
-        self.residue.grid(row=2, column=4, sticky=N+W)
+        self.residue.grid(row=1, column=1, sticky=N+W)
 
         #link = Label(frame2, text="Enlighten home", fg="blue", cursor="hand2")
         #link.bind("<Button-1>", callback)

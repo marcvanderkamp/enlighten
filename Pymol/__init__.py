@@ -138,6 +138,8 @@ class enlighten(Frame):
         self.residue = Entry(frame4, width=14)
         self.residue.insert(END, '')
         self.residue.grid(row=1, column=1, sticky=N+W)
+        #self.residue_string = '"{}"'.format(self.residue.get()) #'"'+self.residue.get()+'"'
+        #print(self.residue.get())
 
         #link = Label(frame2, text="Enlighten home", fg="blue", cursor="hand2")
         #link.bind("<Button-1>", callback)
@@ -266,6 +268,7 @@ class enlighten(Frame):
         pymol.cmd.set("pdb_use_ter_records", "off")
         print("Setting the enlighten path to %s" % self.enlightenpath.get())
         os.environ["ENLIGHTEN"] = self.enlightenpath.get()
+        self.residue_string = '"{}"'.format(self.residue.get())  # '"'+self.residue.get()+'"'
         if self.fv.get() == 1:
             if self.ligandname.get() == "Ligand name" or len(self.entry1.get()) == 0:
                 tkMessageBox.showinfo("Error","Error missing ligand name or object")
@@ -273,8 +276,13 @@ class enlighten(Frame):
             os.chdir(self.workingpath.get())
             os.environ["AMBERHOME"] = self.amberpath.get()
             # Saves the command for use
+            print(self.residue.get())
+            print(self.residue_string)
+
             command = self.enlightenpath.get() + "/prep.sh " + os.path.basename(
-                self.entry1.get()) + " " + self.ligandname.get() + " " + self.ligandcharge.get()
+                self.entry1.get()) + " " + self.ligandname.get() + " " + self.ligandcharge.get() + " " \
+                      + self.residue_string
+            print(command)
             #Executes the command passed above
             p = subprocess.Popen([command], shell=True, stderr=subprocess.PIPE)
             # This intiates a wait for the output to complete before the next stage is run
@@ -308,7 +316,7 @@ class enlighten(Frame):
             os.environ["AMBERHOME"] = self.amberpath.get()
             os.environ["PATH"] = os.environ["PATH"] + ":" + os.environ["AMBERHOME"] + "/bin"
             command = self.enlightenpath.get() + "/prep.sh " + self.selection + ".pdb" + " " + self.ligandname.get() +\
-                      " " + self.ligandcharge.get()
+                      " " + self.ligandcharge.get() + " " + self.residue_string
             p = subprocess.Popen([command], shell=True, stderr=subprocess.PIPE,stdout=subprocess.PIPE)
             while True:
                 output = p.stdout.read(1)

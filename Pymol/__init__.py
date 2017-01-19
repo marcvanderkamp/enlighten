@@ -299,8 +299,8 @@ class enlighten(Frame):
             sys.stdout.flush()
             path = os.path.split(self.entry1.get())
             temp = path[1].split('.')
-            # First loads the topology file
-            pymol.cmd.load("./" + temp[0] + "/" + temp[0] + ".sp20.top", temp[0] + ".sp20")
+            # Loads the topology file (not used, as PyMOL cartoon visualisation doesn't work)
+            #pymol.cmd.load("./" + temp[0] + "/" + temp[0] + ".sp20.top", temp[0] + ".sp20")
             # Loads the pdb
             pymol.cmd.load("./" + temp[0] + "/" + temp[0] + ".sp20.pdb", temp[0] + ".sp20")
             self.pdb = os.path.basename(self.entry1.get())
@@ -333,7 +333,9 @@ class enlighten(Frame):
 
 
             temp = self.selection
-            pymol.cmd.load("./" + temp + "/" + temp + ".sp20.top", temp + ".sp20")
+            # Loads the topology file (not used, as PyMOL cartoon visualisation doesn't work)
+            #pymol.cmd.load("./" + temp + "/" + temp + ".sp20.top", temp + ".sp20")
+            # Loads the pdb
             pymol.cmd.load("./" + temp +"/" + temp +  ".sp20.pdb", temp + ".sp20") # fixme
             self.pdb = self.selection + ".pdb"
         self.structButton.config(state="normal")

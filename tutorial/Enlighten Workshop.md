@@ -6,7 +6,7 @@ As an example, we will make a model of the class A beta-lactamase TEM-1 with sul
 ## Preparation
 
 ### Step 1
-*Step 1 is only required when doing this tutorial on your own computer*
+[//]: <> (For MVB 2.1: *Step 1 is only required when doing this tutorial on your own computer*)
 
 ---
 

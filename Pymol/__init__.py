@@ -133,7 +133,7 @@ class enlighten(Frame):
 
         # Non standard residue name box
 
-        lbl9 = Label(frame4, fg="red", text="Residue", width=10)
+        lbl9 = Label(frame4, fg="red", text="Alt. Res.", width=10)
         lbl9.grid(row=1, column=0, sticky=N)
         self.residue = Entry(frame4, width=14)
         self.residue.insert(END, '')
@@ -265,7 +265,7 @@ class enlighten(Frame):
 
 
 
-        pymol.cmd.set("pdb_use_ter_records", "off")
+        #pymol.cmd.set("pdb_use_ter_records", "off")
         print("Setting the enlighten path to %s" % self.enlightenpath.get())
         os.environ["ENLIGHTEN"] = self.enlightenpath.get()
         self.residue_string = '"{}"'.format(self.residue.get())  # '"'+self.residue.get()+'"'
@@ -339,6 +339,7 @@ class enlighten(Frame):
             pymol.cmd.load("./" + temp +"/" + temp +  ".sp20.pdb", temp + ".sp20") # fixme
             self.pdb = self.selection + ".pdb"
         self.structButton.config(state="normal")
+
 
     def runstruct(self):
         os.environ["ENLIGHTEN"] = self.enlightenpath.get()

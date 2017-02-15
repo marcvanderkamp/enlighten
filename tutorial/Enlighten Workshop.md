@@ -1,4 +1,4 @@
-# Enlighten Tutorial
+# Enlighten Tutorial 1
 As an example, we will make a model of the class A beta-lactamase TEM-1 with sulbactam. There is no crystal structure available for the complex of TEM-1 with sulbactam, so we will use PyMOL to create a model from two different crystal structures.
 
 **NB**: Whenever text is written in a `box like this`, it is a command that should be typed on a "command line", either in a "terminal" or in the PyMOL control panel.
@@ -50,6 +50,16 @@ A message will appear to say that the plugin has been successfull installed. Exi
 
 
 ## Part 1: Making a model of the TEM-1-Sulbactam complex
+
+*NB: if you want to skip Part 1 and go straight to Part 2, you can set up the model by running a pre-prepared PyMOL script.
+This script can be found here: $ENLIGHTEN/tutorial/setup.pml*
+
+*To load the script, type in the PyMOL control panel (replacing /my/path/to/enlighten/ as appropriate):*
+
+`@ /my/path/to/enlighten/tutorial/setup.pml`
+
+------
+
 We will use PyMOL to obtain the crystal structures we need directly from the protein databank. In the control panel type:
 
 `fetch 1BTL`
@@ -80,12 +90,18 @@ We will now create a new PyMOL object which has the protein coordinates from PDB
 ![](1btl_0rn.png)
 
 We now have a new object in the right-hand panel of the viewing window called 1btl_0rn. Hide the original structures 1BTL and 4FH2 by clicking on their names in the right-hand panel.
-We need to tidy up the structure a little bit before we can begin simulations. Firstly, we need to remove an SO4 ion that is present from the crystalisation conditions. Information about the crystalisation conditions and other small molecules that have been identified in the structure is given in the header of the PDB and also on the structure page of the Protein databank: <http://www.rcsb.org/pdb/explore/explore.do?structureId=1BTL>
 
+-------
+
+We need to tidy up the structure a little bit before we can begin simulations. Firstly, we need to remove an sulfate (SO4) ion that is present from the crystalisation conditions. Information about the crystalisation conditions and other small molecules that have been identified in the structure is given in the header of the PDB and also on the structure page of the Protein databank: <http://www.rcsb.org/pdb/explore/explore.do?structureId=1BTL>
+
+To remove all sulfate ions (in this case just one):
+
+`remove (1btl_0rn and resname SO4)`
 
 ![](SO4.png)
 
-`remove (1btl_0rn and resname SO4)`
+-------
 
 We also need to remove the water molecules that were part of 1BTL in the region we have just placed sulbactam. To do this we need to identlfy the water molecules overlapping with 0RN in our new model 1btl_0rn.  Now we will zoom in on the ligand.
 
@@ -103,26 +119,30 @@ This will show the ligand in stick form. From the menu that appears when you cli
 
 We will now identify the water molecules.
 
-`select HOH, (1btl_0rn and resname HOH within 2.0 of 0RN)`
+`select HOH, (1btl_0rn and resname HOH within 2.0 of resname 0RN)`
 
 This command will select 4 water molecules, you may wish to zoom on the HOH object to see them better. You can also change how the water molecules are displayed e.g. choose spheres from the drop-down menu that appears when you click on the S button for the HOH object. 
 
 ![](waters.png)
  
-Click on the water molecules to find their residue numbers. This information will appear in the control window e.g. 
+If you want to delete all water molecules in the selection HOH (which is sensible), you can do:
 
-Selector: selection "sele" defined with 1 atoms.  
-You clicked /1btl_0rn/C/A/HOH`404/O
-
-When the residue numbers of all 4 water molecules have been identified they can be deleted from the structure:
-
-`remove (1btl_0rn and resname HOH and res 323+391+404+437)`
+`remove (1btl_0rn and HOH)`
 
 or go to the A button for the HOH object and choose remove atoms.
 
 ![](remove_atoms.png)
- 
 
+For removing specific water molecules, you can click on the water molecules to find their residue numbers. This information will appear in the control window e.g. 
+
+Selector: selection "sele" defined with 1 atoms.  
+You clicked /1btl_0rn/C/A/HOH`404/O
+
+When you have found the residue numbers of the water molecules you want to delete, this is how they can be deleted from the structure:
+
+`remove (1btl_0rn and resname HOH and res 323+391+404+437)`
+ 
+-------
 
 We will now add hydrogen atoms to sulbactam using the h_add function in PyMOL. 
 
@@ -135,6 +155,12 @@ Note that sulbactam has a charge of -1*e* and you will need to check visually to
 For ease of identification during simulations we will change the chain id for the ligand 0RN.
 
 `alter 0RN, chain="L"`
+
+-------
+
+Class A beta-lactamase residue numbering is somewhat of a special case: all residue numbers amongst different beta-lactamases are given corresponding numbers, e.g. the Serine residue is always Ser70. To account for insertions/deletions between different sequences, the PDB files contain 'insertion codes' and non-consecutive residue numbers. The second causes PyMOL to insert TER records (indicating a break in the polypepdtide chain). When using *Enlighten* through the PyMOL plugin for beta-lactamses, we therefore have to change this behaviour:
+
+`set pdb_use_ter_records, off`
 
 We have now done everything needed to create a model of the wild-type TEM-1 with sulbactam that can be used as input for *Enlighten*.
 
@@ -149,7 +175,13 @@ A new enlighten control panel will appear. Some settings will be given as a defa
 
 ![](enlighten_menu.png)
 
-RUN PREP may take a couple of minutes to complete. When it is finished a new object "1btl_0rn.sp20" will be loaded into PyMOL. You will see that hydrogens have been added to the system and a solvent cap of radius 20 Å has been added to the model.
+RUN PREP may take a couple of minutes to complete. Please check if you see the following printed in the PyMOL control panel:
+
+*Finished PREP protocol.*
+
+This means the protocol has finished successfully. If not, please note the message printed for more information.
+
+When PREP has finished successfully, a new object "1btl_0rn.sp20" will have been loaded into PyMOL. You will see that hydrogens have been added to the system and a solvent cap of radius 20 Å has been added to the model.
 
 ![](prep_finished.png)
 
@@ -163,7 +195,7 @@ The STRUCT protocol will take a few minutes to run and when it has finished a ne
 ![](run_dynam.png)
 
 
-This will take some time to run, so we will now start to prepare our mutant model.
+This will take some time to run (you will see estimated timings printed in the control panel), so we will now start to prepare our mutant model.
 
 ## Part 3: Creating a mutant and running *Enlighten*
 
@@ -202,7 +234,13 @@ A new enlighten control panel will appear. To run simulations on the mutant mode
 
 ## Part 4: Analysis
 
-The MD trajectory will automatically be loaded into the 1btl\_0rn.sp20 object when DYNAM is finished. Press the play button to move between the frames. You can adjust the number of frames per second in the Movie drop-down menu. You can use the measurement function in the Wizard menu to monitor distances during the MD simulation. 
+The MD trajectory will automatically be loaded into the 1btl\_0rn.sp20 object when DYNAM is finished. *If this is not the case, you can load it yourself into the 1btl_0rn.sp20 object:*
+
+`load 1btl_0rn/dynam/md_1btl_0rn.sp20.trj, 1btl_0rn.sp20, 3, trj`
+`load 1btl_0rn/dynam/min_1btl_0rn.sp20.rst, 1btl_0rn.sp20`
+
+
+Press the play button to move between the frames. You can adjust the number of frames per second in the Movie drop-down menu. You can use the measurement function in the Wizard menu to monitor distances during the MD simulation. 
 
 ![](measurement_wizard.png)
 

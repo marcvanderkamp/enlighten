@@ -2,7 +2,10 @@ Enlighten
 ============
 
 Protocols and tools to run (automated) atomistic simulations of enzyme-ligand systems.
+
 For the PyMOL plugin, see [here](https://github.com/marcvanderkamp/enlighten/blob/master/Pymol/README.md).
+
+There are two tutorials the plugin (for beginners), that are used for tutorial workshops: [Tutorial 1](https://github.com/marcvanderkamp/enlighten/blob/master/tutorial/tutorial1.md) and [Tutorial 2](https://github.com/marcvanderkamp/enlighten/blob/master/tutorial/tutorial2.md).
 
 To acknowledge the use of the Enlighten plugin and/or protocols, please refer to this website.
 (There is no publication to cite yet, please check back later.)
@@ -22,7 +25,7 @@ Several utitilies/programs from AmberTools14 (or later) are used for the majorit
 
 Additional recommended software requirements:
 
-- propka31 (see www.propka.ki.ku.dk and/or https://github.com/jensengroup/propka-3.1; Required for pKa estimation titratable residues, in presence of ligand)
+- propka31 (see the [github site](https://github.com/jensengroup/propka-3.1) or here: www.propka.ki.ku.dk; Required for p*K*a estimation titratable residues, in presence of ligand)
 
 
 **NB:** Currently, the automation of protocols is only available through bash-scripts (for Linux or Mac OS X).

@@ -1,6 +1,8 @@
 # Enlighten Tutorial 1
 As an example, we will make a model of the class A beta-lactamase TEM-1 with sulbactam. There is no crystal structure available for the complex of TEM-1 with sulbactam, so we will use PyMOL to create a model from two different crystal structures.
 
+A second tutorial, demonstrating the use of Enlighten with a (non-covalent) co-factor, is [here](https://github.com/marcvanderkamp/enlighten/blob/master/tutorial/tutorial2.md).
+
 **NB**: Whenever text is written in a `box like this`, it is a command that should be typed on a "command line", either in a "terminal" or in the PyMOL control panel.
 
 ## Preparation

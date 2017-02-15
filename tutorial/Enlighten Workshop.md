@@ -6,7 +6,6 @@ As an example, we will make a model of the class A beta-lactamase TEM-1 with sul
 ## Preparation
 
 ### Step 1
-*Step 1 is only required when doing this tutorial on your own computer*
 
 ---
 
@@ -24,7 +23,8 @@ where /my/path/to/enlighten/ will be something like "/Users/kr8728/enlighten"
 
 
 ### Step 2
-Open PyMOL. On the Linux PCs in MVB 2.11, this can be done by opening a "terminal" (click on top left icon on a Linux PC) and in this "terminal", type:
+Open PyMOL. 
+On typical Linux PCs (e.g. in Bristol in MVB 2.11), this can be done by opening a "terminal" (click on top left icon on a Linux PC) and in this "terminal", type:
 
 `pymol`
 
@@ -303,7 +303,7 @@ If you have time:
 -----------
 
 
-__When you have come to the end of the tutorial and explored *Enlighten* in some detail, please fill out the *[feedback survey](http://goo.gl/forms/UDIJO32AIkU44R1D3)* !__
+__When you have come to the end of the tutorial and explored *Enlighten* in some detail, please fill out the *[feedback survey](https://docs.google.com/forms/d/e/1FAIpQLScO0iCWLSjeSMaVAU60GcSgXWF1GuWlvEb2JKTizRgjO_6IzQ/viewform)* !__
 
 Results from the survey will influence future priorities for further development, so your views are important.
 

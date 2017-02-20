@@ -1,7 +1,7 @@
 # Enlighten Tutorial 1
 As an example, we will make a model of the class A beta-lactamase TEM-1 with sulbactam. There is no crystal structure available for the complex of TEM-1 with sulbactam, so we will use PyMOL to create a model from two different crystal structures.
 
-A second tutorial, demonstrating the use of Enlighten with a (non-covalent) co-factor, is [here](https://github.com/marcvanderkamp/enlighten/blob/master/tutorial/tutorial2.md).
+A second tutorial, demonstrating the use of Enlighten with a (non-covalent) co-factor, is [here](https://github.com/marcvanderkamp/enlighten/blob/master/tutorial2/tutorial2.md).
 
 **NB**: Whenever text is written in a `box like this`, it is a command that should be typed on a "command line", either in a "terminal" or in the PyMOL control panel.
 
@@ -177,7 +177,7 @@ A new enlighten control panel will appear. Some settings will be given as a defa
 
 ![](enlighten_menu.png)
 
-RUN PREP may take a couple of minutes to complete. Please check if you see the following printed in the PyMOL control panel:
+RUN PREP may take a couple of minutes to complete. Please wait until you see the following printed in the PyMOL control panel:
 
 *Finished PREP protocol.*
 
@@ -277,7 +277,7 @@ Highlight the position of the sulbalactam by showing it in stick representation.
 
 ![](rmsf_output.png)
 
-You can also plot the RMSF data against residue number. To do this open the file "rmsf_ca.dat" with LibreOffice or EXCEL.
+You can also plot the RMSF data against residue number. To do this open the file "rmsf_ca.dat" with e.g. LibreOffice or EXCEL.
 
 ![](rmsf_plot.png)
 
@@ -305,13 +305,13 @@ If you have time:
 -----------
 
 
-__When you have come to the end of the tutorial and explored *Enlighten* in some detail, please fill out the *[feedback survey](http://goo.gl/forms/UDIJO32AIkU44R1D3)* !__
+__When you have come to the end of the tutorial and explored *Enlighten* in some detail, please fill out the *[feedback survey](https://goo.gl/forms/2KsHY7PGuqA9skV53)*.__
 
 Results from the survey will influence future priorities for further development, so your views are important.
 
-If you have in-depth feedback or thoughts about Enlighten you would like to share, please get in touch.
-
 Bugs in the Enlighten plugin or scripts can be reported as an "Issue" through the [github site](https://github.com/marcvanderkamp/enlighten/issues).
+
+If you have in-depth feedback or thoughts about Enlighten you would like to share, please [get in touch](mailto:marcvanderkamp@gmail.com).
 
 ### Thank you!
 

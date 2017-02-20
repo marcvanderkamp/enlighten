@@ -10,7 +10,7 @@ There are two tutorials the plugin (for beginners), that are used for tutorial w
 To acknowledge the use of the Enlighten plugin and/or protocols, please refer to this website.
 (There is no publication to cite yet, please check back later.)
 
-We gratefully acknowledge funding from [BBSRC](http://www.bbsrc.ac.uk).
+We gratefully acknowledge initial funding from [BBSRC](http://www.bbsrc.ac.uk).
 
 Aimed at:
  

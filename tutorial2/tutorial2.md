@@ -1,5 +1,5 @@
 # Enlighten Tutorial 2: enzyme with co-factor
-As an example of an enzyme system with (non-covalently bound) co-factor, we will use an NADP(H) containing reductase enzyme: isopiperitenone reductase. The starting point is PDB 5LDG, the structure of isopiperitenone reductase complexed with its substrate and NADP (see further [this paper](http://dx.dox.org/10.1002/ange.201603785)). We will need to supply parameters for the NADP co-factor.
+As an example of an enzyme system with (non-covalently bound) co-factor, we will use an NADP(H) containing reductase enzyme: isopiperitenone reductase. The starting point is PDB 5LDG, the structure of isopiperitenone reductase complexed with its substrate and NADP (see further [this paper](http://dx.doi.org/10.1002/ange.201603785)). We will need to supply parameters for the NADP co-factor.
 
 **NB**: Whenever text is written in a `box like this`, it is a command that should be typed on a "command line", either in a "terminal" or in the PyMOL control panel.
 
@@ -20,6 +20,14 @@ Once the files have downloaded we need to set the ENLIGHTEN variable to indicate
 `export ENLIGHTEN=/my/path/to/enlighten/`
 
 where /my/path/to/enlighten/ will be something like "/Users/ext1234/enlighten"
+
+**N.B.** If you already have cloned *Enlighten*, please make sure it is up-to-date by going into the directory:
+
+`cd $ENLIGHTEN`
+
+And update using a git 'pull':
+
+`git pull`
 
 -------
 
@@ -131,7 +139,7 @@ This will take some time to run (estimated times will be printed in the PyMOL co
 
 ## Part 3: Creating a mutant and running *Enlighten*
 
-We will now create a mutant structure to simulate for comparison. We will make the E238Y mutation, which was shown to switch the activity of the enzyme towards ketoreduction. See [the paper](http://dx.dox.org/10.1002/ange.201603785) for details.
+We will now create a mutant structure to simulate for comparison. We will make the E238Y mutation, which was shown to switch the activity of the enzyme towards ketoreduction. See [the paper](http://dx.doi.org/10.1002/ange.201603785) for details.
 
 We will start by copying our object 5LDG to the new object 5ldg\_e238y.
 
@@ -181,10 +189,12 @@ Press the play button to move between the frames. You can adjust the number of f
 
 ![](../tutorial/measurement_wizard.png)
 
-Zoom in on isopiperitenone (`zoom resname IT9`) and compare the position between wild-type (5LDG) and the E238Y mutant (5ldg_e238y). Also compare the position of the (mutated) residue, Glu238 or Tyr238 (both now renumbered as 234). You could now compare this to the proposed mechanisms in [Scheme 2](http://onlinelibrary.wiley.com/enhanced/figures/doi/10.1002/ange.201603785#figure-viewer-ange201603785-fig-5002) of [the paper](http://dx.dox.org/10.1002/ange.201603785), and see if the simulations can help you to explain the difference between wild-type IPR and IPR E238Y.
+Zoom in on isopiperitenone (`zoom resname IT9`) and compare the position between wild-type (5LDG) and the E238Y mutant (5ldg_e238y). Also compare the position of the (mutated) residue, Glu238 or Tyr238 (both now renumbered as 234). You could now compare this to the proposed mechanisms in [Scheme 2](http://onlinelibrary.wiley.com/enhanced/figures/doi/10.1002/ange.201603785#figure-viewer-ange201603785-fig-5002) of [the paper](http://dx.doi.org/10.1002/ange.201603785), and see if the simulations can help you to explain the difference between wild-type IPR and IPR E238Y. 
+
+(Note that we simulated NADP+, not NADPH, and simulations were performed with the isopiperitenone substrate only. You could further extend this study by using NADPH and re-running simulations with menthone instead of isopiperitenone.)
 
 
-For some examples of the use of the analysis tools available as part of AmberTools, please see Tutorial 1, Part 4. 
+For some examples of the use of the analysis tools available as part of AmberTools, please see [Tutorial 1](../tutorial1/tutorial1.md), Part 4. 
 
 
 -----------

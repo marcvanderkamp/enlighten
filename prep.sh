@@ -189,7 +189,7 @@ if [ $skip_propka31 -ne 1 ]; then
   # Currently, rely on resid being $6 (true if there is a chain ID and resid is 1-3 chars) OR $5 (true if there's no chain ID and resid is 1-3 chars) OR substr($0,23,4) (true if resid is 4 chars)
   #  This will cause problems when res is 1-9 and there is a numerical chain ID (a very unusual situation)
   #  (This will be easier to do properly when ${pdb_name}_2.pdb is parsed in a python-script)
-      awk -v resid=$res '{if ($3=="CA" && ($substr($0,23,4)==resid || $6==resid || $5==resid)) {if (substr($0,18,3)=="ASP") {resn="ASH"}; if (substr($0,18,3)=="GLU") {resn="GLH"} ; printf("s,%s %s,%s %s,g \n",substr($0,18,3),substr($0,22,6),resn,substr($0,22,6))}}'  ${pdb_name}_2.pdb >> rename.sed
+      awk -v resid=$res '{if ($3=="CA" && (substr($0,23,4)==resid || $6==resid || $5==resid)) {if (substr($0,18,3)=="ASP") {resn="ASH"}; if (substr($0,18,3)=="GLU") {resn="GLH"} ; printf("s,%s %s,%s %s,g \n",substr($0,18,3),substr($0,22,6),resn,substr($0,22,6))}}'  ${pdb_name}_2.pdb >> rename.sed
     done
   fi
 # Check for CYS/LYS pKa's below deprot_pka and if so, print out and put in deprot_res_lst
@@ -201,7 +201,7 @@ if [ $skip_propka31 -ne 1 ]; then
     for res in $deprot_res_lst; do
       awk -v resid=$res '{if ($4==resid) printf("%s    ",substr($0,1,9))}' ${pdb_name}_1_renum.txt
       awk -v resid=$res '{if (substr($0,1,3)=="   " && ($2==resid || substr($0,7,4)==resid)) print substr($0,17,5)}' ${pdb_name}_2.pka
-      awk -v resid=$res '{if ($3=="CA" && ($substr($0,23,4)==resid || $6==resid || $5==resid)) {if (substr($0,18,3)=="CYS") {resn="CYM"}; if (substr($0,18,3)=="LYS") {resn="LYN"} ; printf("s,%s %s,%s %s,g \n",substr($0,18,3),substr($0,22,6),resn,substr($0,22,6))}}'  ${pdb_name}_2.pdb >> rename.sed
+      awk -v resid=$res '{if ($3=="CA" && (substr($0,23,4)==resid || $6==resid || $5==resid)) {if (substr($0,18,3)=="CYS") {resn="CYM"}; if (substr($0,18,3)=="LYS") {resn="LYN"} ; printf("s,%s %s,%s %s,g \n",substr($0,18,3),substr($0,22,6),resn,substr($0,22,6))}}'  ${pdb_name}_2.pdb >> rename.sed
     done
   fi
 fi

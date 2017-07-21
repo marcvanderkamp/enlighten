@@ -5,7 +5,7 @@ Protocols and tools to run (automated) atomistic simulations of enzyme-ligand sy
 
 For the PyMOL plugin, see [here](https://github.com/marcvanderkamp/enlighten/blob/master/Pymol/README.md).
 
-There are two tutorials the plugin (for beginners), that are used for tutorial workshops: [Tutorial 1](https://github.com/marcvanderkamp/enlighten/blob/master/tutorial/tutorial1.md) and [Tutorial 2](https://github.com/marcvanderkamp/enlighten/blob/master/tutorial/tutorial2.md).
+There are two tutorials the plugin (for beginners), that are used for tutorial workshops: [Tutorial 1](https://github.com/marcvanderkamp/enlighten/blob/master/tutorial/tutorial1.md) and [Tutorial 2](https://github.com/marcvanderkamp/enlighten/blob/master/tutorial2/tutorial2.md).
 
 To acknowledge the use of the Enlighten plugin and/or protocols, please refer to this website.
 (There is no publication to cite yet, please check back later.)

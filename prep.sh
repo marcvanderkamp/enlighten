@@ -56,16 +56,18 @@ if [ $lig_atno -lt 2 ]; then
   echo "Exiting..."
   exit
 fi
-# Count number of ligands by using residue number
-lig_num=`awk -v lig=$lig_name '{if (substr($0,18,3)==lig && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print substr($0,23,4)}' $pdb | uniq | wc -l`
-# Define lig_resn as the first ligand residue occuring (needed in case there are multiple copies of ligand in pdb)
+# Count number of ligands by using residue number AND chain ID
+lig_num=`awk -v lig=$lig_name '{if (substr($0,18,3)==lig && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print substr($0,23,4) substr($0,22,1)}' $pdb | uniq | wc -l`
+# Define lig_resn as the first ligand residue number occuring (needed in case there are multiple copies of ligand in pdb with different residue numbers)
 lig_resn=`awk -v lig=$lig_name '{if (substr($0,18,3)==lig && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print substr($0,23,4)}' $pdb | head -n 1`
+# Deifine lig_chain_id as the first ligand chain ID occuring (needed in case there are multiple copies of ligand in pdb with different chain IDs)
+lig_chain_id=`awk -v lig=$lig_name '{if (substr($0,18,3)==lig && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print substr($0,22,1)}' $pdb | head -n 1`
 # Update lig_atno
-lig_atno=`awk -v lig=$lig_name -v lig_resid="$lig_resn" '{if (substr($0,18,3)==lig && substr($0,23,4)==lig_resid && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print}' $pdb | grep -c $lig_name`
+lig_atno=`awk -v lig=$lig_name -v lig_resid="$lig_resn" -v lig_ch_id=$lig_chain_id '{if (substr($0,18,3)==lig && substr($0,23,4)==lig_resid && substr($0,22,1)==lig_ch_id && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print}' $pdb | grep -c $lig_name`
 #lig_resn=`$lig_resn | xargs`
 # Report
 if [ $lig_num -gt 1 ]; then
-  echo "Multiple $lig_name residues in $pdb. Using residue number $lig_resn for parameterisation."
+  echo "Multiple $lig_name residues in $pdb. Using    $lig_name $lig_chain_id $lig_resn   for parameterisation."
 fi
 echo "Ligand $lig_name contains $lig_atno atoms in $pdb."
 
@@ -97,8 +99,7 @@ echo "Starting PREP protocol in $pdb_name/"
 
 #### Ligand parameterisation
 #### Take single lig from pdb and run antechamber/parmchk2 (will be done in subdir lig/)
-# NB: Currently expects ONE single ligand to be present!
-# TO DO: check for multiple ligs in pdb and take one by getting unique resnum & chain_id?
+# Above code checks for multiple ligs in pdb. Here, take one by getting the first unique resnum & chain_id
 # TO DO: Proper check for errors in antechamber run (eg sqm convergence) and resubmit with different convergenc criteria (or exit)
 # TO DO: additional checks for $lig_name.prepc?
 # TO DO: if lig.prepc already exists, prompt user to overwrite or not?
@@ -117,7 +118,7 @@ elif [ -e include/$lig_name.prepc ]; then
 else
    echo "Preparing parameters for $lig_name: lig/$lig_name.prepc"
    # print only the ATOM/HETATM fields for the ligand with lig_resid
-   awk -v lig=$lig_name -v lig_resid="$lig_resn" '{if (substr($0,18,3)==lig && substr($0,23,4)==lig_resid && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print}' $pdb > lig/$lig_name.pdb
+   awk -v lig=$lig_name -v lig_resid="$lig_resn" -v lig_ch_id="$lig_chain_id" '{if (substr($0,18,3)==lig && substr($0,23,4)==lig_resid && substr($0,22,1)==lig_ch_id && (substr($0,0,4)=="ATOM" || substr($0,0,6)=="HETATM" )) print}' $pdb > lig/$lig_name.pdb
    cd lig
    antechamber -i  $lig_name.pdb -fi pdb -o $lig_name.prepc -fo prepc -rn $lig_name -c bcc -nc $lig_charge
 # Check here if antechamber/sqm have run successfully

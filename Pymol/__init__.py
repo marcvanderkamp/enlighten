@@ -1,9 +1,22 @@
-from pymol import cmd
-import pymol
-from Tkinter import *
+try: #test if in pymol
+    from pymol import cmd
+    import pymol
+    pymolenv=True
+except ImportError:
+    pymolenv=False
+
+try:
+    # for Python2
+    from Tkinter import *   ## notice capitalized T in Tkinter
+    import tkFileDialog
+    import tkMessageBox
+except ImportError:
+    # for Python3
+    from tkinter import *
+    from tkinter import filedialog
+    from tkinter import messagebox
+
 import os
-import tkFileDialog
-import tkMessageBox
 import subprocess
 import webbrowser
 import time
@@ -99,7 +112,7 @@ class enlighten(Frame):
         self.ntslim = Entry(frame2,width=5)
         self.ntslim.insert(END, '100')
         self.ntslim.grid(row=5, column=5)
-        print "number of dynamics steps passed to routine? "+self.ntslim.get()
+        print("number of dynamics steps passed to routine? "+self.ntslim.get())
         self.nstlim = int(self.ntslim.get())  # Convert to time steps variable
 
 
@@ -116,8 +129,11 @@ class enlighten(Frame):
         self.lb1.bind("<MouseWheel>", self.OnMouseWheel)
         self.lb1.bind("<<ListboxSelect>>", self.OnSelect)
 
-        objects = cmd.get_names("all")
-        objects.extend(["Pick object"])
+        if pymolenv: #if being loaded in pymol
+            objects = cmd.get_names("all")
+            objects.extend(["Pick object"])
+        else: #dummy arguments for dev mode
+            objects=["anl5","cbm"]
         for x in objects:
             self.lb1.insert(END, x)
 
@@ -219,8 +235,11 @@ class enlighten(Frame):
             # self.vsb.config(state="normal")
             self.lb1.delete(0, 'end')
 
-            objects=cmd.get_names("all")
-            objects.extend(["Pick object"])
+            if pymolenv:  # if being loaded in pymol
+                objects = cmd.get_names("all")
+                objects.extend(["Pick object"])
+            else:  # dummy arguments for dev mode
+                objects = ["anl5", "cbm"]
             for x in objects:
                 self.lb1.insert(END, x)
 
@@ -365,7 +384,7 @@ class enlighten(Frame):
         temp = self.pdb[:-4]
         pymol.cmd.load("./" + temp +"/struct/min_sa_"+ temp + ".sp20.rst", temp + ".sp20")
         self.dynamButton.config(state="normal")
-        print "Job Finished"
+        print("Job Finished")
 
     # Run a dynamics calculation on the given structure
     # - heat.i: Brief heating(only 5 ps MD), meant to run with output from struct.sh (min_sa_ *.rst).
@@ -422,8 +441,16 @@ class enlighten(Frame):
         pymol.cmd.load("./" + temp + "/dynam/md_" + temp + ".sp20.trj", temp+".sp20",3,"trj")
         pymol.cmd.load("./" + temp + "/dynam/min_" + temp + ".sp20.rst", temp+".sp20")
 
-def mainDialog():
-    # Tk is a tinker python gui library, This is the default toolkit used in pymol
+
+if pymolenv:  # if being loaded in pymol
+    def mainDialog():
+        # Tk is a tinker python gui library, This is the default toolkit used in pymol
+        root = Tk()
+        root.resizable(0, 0)  # currently not resizable due to lack of reflow
+        enlighten(root)  # This is where the enlighten class is called, passes the parent frame
+        root.mainloop()
+
+else:  # dummy arguments for dev mode
     root = Tk()
     root.resizable(0, 0)  # currently not resizable due to lack of reflow
     enlighten(root)  # This is where the enlighten class is called, passes the parent frame

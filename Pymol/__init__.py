@@ -177,7 +177,10 @@ class enlighten(Frame):
         self.website.grid(row=0, column=4, padx=0,sticky="e")
     # This next section defines a series of dialogues that are opened according the the actions from above
     def onOpenF(self):
-        pdb = tkFileDialog.askopenfilename()
+        try:
+            pdb = tkFileDialog.askopenfilename()
+        except:
+            pdb = filedialog.askopenfilename()
         self.entry1.delete(0, 'end')
         self.entry1.insert(0, pdb)
         path = os.path.split(pdb)
@@ -185,19 +188,28 @@ class enlighten(Frame):
         self.workingpath.insert(0, path[0])
 
     def onOpenA(self):
-        amber = tkFileDialog.askdirectory()
+        try:
+            amber = tkFileDialog.askdirectory()
+        except:
+            amber = filedialog.askopenfilename()
         self.amberpath.delete(0, 'end')
         self.amberpath.insert(0, amber)
 
     def onOpenO(self):
-        out = tkFileDialog.askdirectory()
+        try:
+            out = tkFileDialog.askdirectory()
+        except:
+            out = filedialog.askopenfilename()
         self.workingpath.delete(0, 'end')
         self.workingpath.insert(0, out)
 
     def onOpen(self):
-        fold = tkFileDialog.askdirectory()
-        self.enlightenpath.delete(0, 'end')
-        self.enlightenpath.insert(0, fold)
+        try:
+            fold = tkFileDialog.askdirectory()
+        except:
+            fold = filedialog.askopenfilename()
+        self.cocomdpath.delete(0, 'end')
+        self.cocomdpath.insert(0, fold)
         os.environ["ENLIGHTEN"] = str(fold)
 
     def OnVsb(self, *args):
